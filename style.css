@@ -1,0 +1,3088 @@
+/* ── DARK THEME VARIABLES (default) ── */
+/* :root applies these variables to the entire page by default */
+:root,
+/* [data-theme="dark"] re-applies when JS explicitly switches to dark mode */
+[data-theme="dark"] {
+  --bg: #09110d;
+  /* Darkest page background: very dark green-black */
+  --surface: #111a14;
+  /* Slightly lighter card/panel background color */
+  --surface-2: #172112;
+  /* Lighter shade used for hover and secondary surfaces */
+  --border: #1e2e20;
+  /* Subtle border color drawn between elements */
+  --text: #e8f5ed;
+  /* Primary text: near-white with a soft green tint */
+  --text-muted: #7a9982;
+  /* Secondary text: muted sage green for labels */
+  --text-faint: #3d5542;
+  /* Faintest text used for placeholders and disabled states */
+  --accent: #10b981;
+  /* Brand accent: Emerald Green for buttons and highlights */
+  --accent-hover: #0d9e6e;
+  /* Darker emerald used on hover states */
+  --accent-glow: rgba(16, 185, 129, 0.15);
+  /* Transparent emerald for box-shadow glow */
+  --accent-light: rgba(16, 185, 129, 0.08);
+  /* Very faint emerald tint for badge backgrounds */
+  --score-high: #10b981;
+  /* Green applied to match scores of 75% and above */
+  --score-mid: #f59e0b;
+  /* Amber applied to match scores of 50 to 74% */
+  --score-low: #ef4444;
+  /* Red applied to match scores below 50% */
+  --nav-bg: rgba(9, 17, 13, 0.88);
+  /* Semi-transparent dark background for frosted navbar */
+  --nav-border: #1e2e20;
+  /* Border color drawn at the bottom of the navbar */
+  --shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+  /* Drop shadow used on floating elements */
+  --input-bg: #0f1a11;
+  /* Dark background color used inside text inputs */
+  --input-border: #2a3d2c;
+  /* Border drawn around text inputs and dropdowns */
+  --input-focus: #10b981;
+  /* Emerald border shown on a focused input field */
+}
+
+/* ── LIGHT THEME VARIABLES — active when JS sets data-theme="light" ── */
+/* All variables below override the dark theme when light mode is active */
+[data-theme="light"] {
+  --bg: #f0f9f4;
+  /* Light mint page background for light mode */
+  --surface: #ffffff;
+  /* Pure white card background in light mode */
+  --surface-2: #e8f5ed;
+  /* Light green tint for hover surfaces in light mode */
+  --border: #c8e6d0;
+  /* Soft mint border color used in light mode */
+  --text: #0f2617;
+  /* Very dark forest green text for readability on white */
+  --text-muted: #4a7459;
+  /* Medium green-grey for secondary labels in light mode */
+  --text-faint: #8ab89a;
+  /* Light sage for placeholder text in light mode */
+  --accent: #059669;
+  /* Slightly darker emerald for better contrast on white */
+  --accent-hover: #047857;
+  /* Even darker emerald for hover states in light mode */
+  --accent-glow: rgba(5, 150, 105, 0.12);
+  /* Transparent glow for box-shadows in light mode */
+  --accent-light: rgba(5, 150, 105, 0.06);
+  /* Very faint emerald tint for backgrounds in light mode */
+  --score-high: #059669;
+  /* Darker green for high scores to contrast on white */
+  --score-mid: #d97706;
+  /* Darker amber for mid scores to contrast on white */
+  --score-low: #dc2626;
+  /* Darker red for low scores to contrast on white */
+  --nav-bg: rgba(240, 249, 244, 0.92);
+  /* Semi-transparent light mint for navbar background */
+  --nav-border: #c8e6d0;
+  /* Soft mint border at the bottom of the navbar */
+  --shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  /* Lighter shadow used in light mode */
+  --input-bg: #f8fffe;
+  /* Nearly white input background for light mode */
+  --input-border: #b6d9c0;
+  /* Soft green border around inputs in light mode */
+  --input-focus: #059669;
+  /* Darker emerald focus border for inputs in light mode */
+}
+
+/* ── RESET & BASE ── */
+/* Selects all elements and their pseudo-elements for the universal reset */
+*,
+*::before,
+*::after {
+  margin: 0;
+  /* Removes all default outer spacing from every element */
+  padding: 0;
+  /* Removes all default inner spacing from every element */
+  box-sizing: border-box;
+  /* Includes padding and border inside the element's total width */
+}
+
+/* Enables animated smooth scrolling when jumping to anchor links */
+html {
+  scroll-behavior: smooth;
+  /* Animates page scroll instead of instantly jumping */
+}
+
+/* Sets the base font, background, text color, and minimum height for the page */
+body {
+  font-family: 'DM Sans', sans-serif;
+  /* Uses DM Sans as the main readable body font */
+  background: var(--bg);
+  /* Applies the current theme background color */
+  color: var(--text);
+  /* Applies the current theme text color */
+  min-height: 100vh;
+  /* Ensures the body fills the full visible screen height */
+  line-height: 1.65;
+  /* Sets comfortable vertical spacing between lines of text */
+  transition: background .3s, color .3s;
+  /* Animates color changes smoothly on theme switch */
+}
+
+/* Makes links inherit surrounding text color and removes underline */
+a {
+  color: inherit;
+  /* Link color matches the surrounding text instead of default blue */
+  text-decoration: none;
+  /* Removes the default underline from all anchor tags */
+}
+
+/* Removes bullet points from all unordered lists */
+ul {
+  list-style: none;
+  /* Hides the default disc markers on list items */
+}
+
+/* Applies the Syne display font and tight letter-spacing to all headings */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Syne', sans-serif;
+  /* Uses bold geometric Syne font for all headings */
+  line-height: 1.2;
+  /* Sets tighter line height for large heading text */
+  letter-spacing: -.02em;
+  /* Tightens letter spacing for a modern heading look */
+}
+
+/* Utility class that applies the emerald accent color to any text element */
+.accent {
+  color: var(--accent);
+  /* Turns any element's text the current theme accent color */
+}
+
+/* ── LAYOUT ── */
+/* Centers content with a max width and adds horizontal padding */
+.container {
+  max-width: 1160px;
+  /* Limits content to 1160 pixels wide on large screens */
+  margin: 0 auto;
+  /* Centers the container horizontally on the page */
+  padding: 0 24px;
+  /* Adds left and right padding inside the container */
+}
+
+/* Adds top padding to clear the fixed navbar and sets minimum page height */
+.main-content {
+  padding-top: 64px;
+  /* Pushes all content below the 64px fixed navbar */
+  min-height: calc(100vh - 100px);
+  /* Ensures the page is tall enough to push the footer down */
+}
+
+/* ── NAVBAR ── */
+/* Fixed navbar that stays visible at the top of the viewport while scrolling */
+.navbar {
+  position: fixed;
+  /* Locks the navbar to the top of the viewport */
+  top: 0;
+  /* Anchors the navbar to the very top of the screen */
+  left: 0;
+  /* Stretches the navbar to the left edge */
+  right: 0;
+  /* Stretches the navbar to the right edge */
+  height: 64px;
+  /* Sets the navbar to exactly 64 pixels tall */
+  background: var(--nav-bg);
+  /* Applies the semi-transparent frosted glass background */
+  backdrop-filter: blur(12px);
+  /* Blurs page content visible behind the navbar */
+  border-bottom: 1px solid var(--nav-border);
+  /* Draws a subtle line below the navbar */
+  display: flex;
+  /* Arranges navbar children in a horizontal row */
+  align-items: center;
+  /* Vertically centers all children in the navbar */
+  justify-content: space-between;
+  /* Logo left, links center, toggle right */
+  padding: 0 32px;
+  /* Adds horizontal padding inside the navbar */
+  z-index: 100;
+  /* Ensures the navbar renders above all other page elements */
+  transition: background .3s;
+  /* Smoothly animates background on theme change */
+}
+
+/* Styles the logo as a horizontal flex row with icon and text */
+.nav-logo {
+  display: flex;
+  /* Places the hexagon icon and text side by side */
+  align-items: center;
+  /* Vertically centers the icon with the text */
+  gap: 10px;
+  /* Adds space between the hexagon and the logo text */
+  font-family: 'Syne', sans-serif;
+  /* Uses the bold Syne font for the logo */
+  font-size: 1.3rem;
+  /* Makes the logo text larger than body text */
+  font-weight: 800;
+  /* Makes the logo text as bold as possible */
+  letter-spacing: -.03em;
+  /* Tightens letter spacing for a sleek logo style */
+}
+
+/* Styles the hexagon icon in the navbar logo */
+.logo-icon {
+  font-size: 1.5rem;
+  /* Makes the hexagon symbol larger than the text */
+  color: var(--accent);
+  /* Colors the hexagon with the emerald accent */
+}
+
+/* Wraps the navigation links in a horizontal row */
+.nav-links {
+  display: flex;
+  /* Arranges the Screen and History links side by side */
+  gap: 4px;
+  /* Adds a small gap between navigation links */
+}
+
+/* Styles each navigation link as a pill */
+.nav-link {
+  display: flex;
+  /* Places the icon and text side by side inside the link */
+  align-items: center;
+  /* Vertically centers the icon with the link text */
+  gap: 8px;
+  /* Adds space between the icon and the link label */
+  padding: 6px 14px;
+  /* Adds padding to create the pill button shape */
+  border-radius: 8px;
+  /* Rounds the link pill corners */
+  font-size: .88rem;
+  /* Sets a slightly smaller font than body text */
+  font-weight: 500;
+  /* Makes link text medium weight */
+  color: var(--text-muted);
+  /* Uses muted color for inactive nav links */
+  transition: all .2s;
+  /* Smoothly animates all visual changes on hover */
+}
+
+/* Highlights a link on hover or when it matches the active page */
+.nav-link:hover,
+.nav-link.active {
+  background: var(--accent-light);
+  /* Adds a faint emerald background to active links */
+  color: var(--accent);
+  /* Colors active link text with the emerald accent */
+}
+
+/* Styles the circular theme toggle button in the top-right of the navbar */
+.theme-toggle {
+  width: 38px;
+  /* Sets the toggle to a fixed 38 pixel width */
+  height: 38px;
+  /* Sets the toggle to a fixed 38 pixel height */
+  border-radius: 50%;
+  /* Makes the toggle a perfect circle */
+  border: 1px solid var(--border);
+  /* Draws a border around the circle */
+  background: var(--surface);
+  /* Fills the toggle with the surface color */
+  color: var(--text-muted);
+  /* Colors the moon/sun icon with the muted color */
+  cursor: pointer;
+  /* Shows a hand cursor on hover */
+  display: flex;
+  /* Centers the icon inside the circle */
+  align-items: center;
+  /* Vertically centers the icon */
+  justify-content: center;
+  /* Horizontally centers the icon */
+  font-size: .9rem;
+  /* Sets the icon size */
+  transition: all .2s;
+  /* Smoothly animates visual changes on hover */
+}
+
+/* Changes the toggle appearance when hovered */
+.theme-toggle:hover {
+  background: var(--accent-light);
+  /* Adds faint emerald background on hover */
+  color: var(--accent);
+  /* Colors the icon emerald on hover */
+  border-color: var(--accent);
+  /* Changes the border to emerald on hover */
+}
+
+/* ── FOOTER ── */
+/* Styles the page footer at the very bottom */
+.footer {
+  border-top: 1px solid var(--border);
+  /* Draws a line above the footer */
+  padding: 20px;
+  /* Adds spacing inside the footer */
+  text-align: center;
+  /* Centers footer text horizontally */
+  font-size: .82rem;
+  /* Makes footer text slightly smaller than body text */
+  color: var(--text-faint);
+  /* Uses the faintest text color for the footer */
+  margin-top: 80px;
+  /* Adds space above the footer to separate from content */
+}
+
+/* Styles the small decorative square between footer text segments */
+.footer-accent {
+  color: var(--accent);
+  /* Colors the decorative square with the emerald accent */
+  margin: 0 6px;
+  /* Adds horizontal spacing around the decorative square */
+}
+
+/* ── HERO ── */
+/* Styles the large hero section at the top of the upload page */
+.hero {
+  position: relative;
+  /* Creates a context for the background grid overlay */
+  padding: 80px 24px 56px;
+  /* Adds generous padding inside the hero section */
+  text-align: center;
+  /* Centers all hero content horizontally */
+  overflow: hidden;
+  /* Clips the background grid to stay within the section */
+}
+
+/* CSS dot-grid decorative background drawn with a radial gradient */
+.hero-grid-bg {
+  position: absolute;
+  /* Positions the grid behind all hero content */
+  inset: 0;
+  /* Stretches the grid to fill the entire hero section */
+  background-image: radial-gradient(circle, var(--border) 1px, transparent 1px);
+  /* Draws small dots at every grid intersection */
+  background-size: 32px 32px;
+  /* Sets 32px spacing between each dot */
+  opacity: .5;
+  /* Makes the grid subtle and semi-transparent */
+  pointer-events: none;
+  /* Allows clicks to pass through the grid to elements below */
+}
+
+/* Positions hero text above the decorative background */
+.hero-content {
+  position: relative;
+  /* Creates a stacking context above the background grid */
+  z-index: 1;
+  /* Renders hero text on top of the background grid */
+  max-width: 680px;
+  /* Limits text width for comfortable reading */
+  margin: 0 auto;
+  /* Centers the hero content block */
+}
+
+/* Styles the small AI-Powered Screening badge above the headline */
+.hero-badge {
+  display: inline-flex;
+  /* Shrinks the badge to fit its content */
+  align-items: center;
+  /* Vertically centers the dot and text inside */
+  gap: 8px;
+  /* Adds space between the pulsing dot and the label */
+  background: var(--accent-light);
+  /* Fills the badge with faint emerald */
+  border: 1px solid rgba(16, 185, 129, .2);
+  /* Draws a subtle emerald border */
+  color: var(--accent);
+  /* Colors the badge text with the emerald accent */
+  padding: 6px 16px;
+  /* Adds padding to create the pill shape */
+  border-radius: 100px;
+  /* Fully rounds the badge into a pill */
+  font-size: .78rem;
+  /* Sets a small font size for the badge */
+  font-weight: 600;
+  /* Makes the badge text semi-bold */
+  text-transform: uppercase;
+  /* Converts badge text to all uppercase */
+  letter-spacing: .05em;
+  /* Adds slight letter spacing to the uppercase text */
+  margin-bottom: 24px;
+  /* Adds space below the badge before the headline */
+}
+
+/* Styles the animated pulsing dot inside the hero badge */
+.badge-dot {
+  width: 7px;
+  /* Sets the dot to 7 pixels wide */
+  height: 7px;
+  /* Sets the dot to 7 pixels tall */
+  background: var(--accent);
+  /* Fills the dot with the emerald accent color */
+  border-radius: 50%;
+  /* Makes the dot a perfect circle */
+  animation: pulse 2s infinite;
+  /* Runs the pulse animation continuously */
+}
+
+/* Defines the pulse animation that makes the dot fade and shrink */
+@keyframes pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* Full size and opacity at start and end */
+  50% {
+    opacity: .4;
+    transform: scale(.8);
+  }
+
+  /* Fades and shrinks at the animation midpoint */
+}
+
+/* Styles the main hero headline with fluid responsive font sizing */
+.hero-title {
+  font-size: clamp(2.8rem, 6vw, 4.5rem);
+  /* Scales between 2.8rem and 4.5rem based on screen width */
+  font-weight: 800;
+  /* Makes the headline as bold as possible */
+  letter-spacing: -.04em;
+  /* Tightens letter spacing for a strong headline look */
+  margin-bottom: 20px;
+  /* Adds space below the headline */
+}
+
+/* Styles the subtitle paragraph below the main headline */
+.hero-subtitle {
+  font-size: 1.05rem;
+  /* Sets the subtitle slightly larger than body text */
+  color: var(--text-muted);
+  /* Uses the muted color to separate from the headline */
+  max-width: 520px;
+  /* Limits width for readable line lengths */
+  margin: 0 auto 32px;
+  /* Centers the subtitle and adds space below it */
+}
+
+/* Styles the animated arrow below the hero subtitle */
+.hero-arrow {
+  color: var(--accent);
+  /* Colors the arrow with the emerald accent */
+  font-size: 1rem;
+  /* Sets the arrow icon size */
+  animation: bounce 2s infinite;
+  /* Runs the bounce animation continuously */
+}
+
+/* Defines the bounce animation that moves the arrow up and down */
+@keyframes bounce {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  /* Arrow at its normal vertical position */
+  50% {
+    transform: translateY(6px);
+  }
+
+  /* Arrow shifts 6 pixels downward at midpoint */
+}
+
+/* ── STATS BAR ── */
+/* Styles the three-number stats bar below the hero */
+.stats-bar {
+  display: flex;
+  /* Arranges the three stats horizontally */
+  justify-content: center;
+  /* Centers the stats group horizontally */
+  background: var(--surface);
+  /* Fills the bar with the card surface color */
+  border-top: 1px solid var(--border);
+  /* Draws a line above the stats bar */
+  border-bottom: 1px solid var(--border);
+  /* Draws a line below the stats bar */
+  padding: 20px 24px;
+  /* Adds padding inside the bar */
+}
+
+/* Styles each stat number and label pair */
+.stat-item {
+  display: flex;
+  /* Stacks number above label */
+  flex-direction: column;
+  /* Arranges number and label vertically */
+  align-items: center;
+  /* Centers both horizontally */
+  padding: 0 40px;
+  /* Adds horizontal spacing between stat items */
+}
+
+/* Styles the large number in each stat */
+.stat-number {
+  font-family: 'Syne', sans-serif;
+  /* Uses bold Syne font for stat numbers */
+  font-size: 2rem;
+  /* Makes the stat number large and prominent */
+  font-weight: 800;
+  /* Makes the stat number as bold as possible */
+  color: var(--accent);
+  /* Colors the number with the emerald accent */
+  line-height: 1;
+  /* Removes extra vertical spacing around the number */
+}
+
+/* Styles the label below each stat number */
+.stat-label {
+  font-size: .76rem;
+  /* Makes the label smaller than body text */
+  color: var(--text-muted);
+  /* Uses muted color for the label */
+  text-transform: uppercase;
+  /* Converts the label to all uppercase */
+  letter-spacing: .06em;
+  /* Adds letter spacing to the uppercase label */
+  margin-top: 4px;
+  /* Adds a small gap between the number and label */
+}
+
+/* Styles the vertical divider line between stat items */
+.stat-divider {
+  width: 1px;
+  /* Sets the divider to exactly one pixel wide */
+  height: 40px;
+  /* Sets the divider height to match the stats */
+  background: var(--border);
+  /* Colors the divider with the border variable */
+}
+
+/* ── FORM SECTION ── */
+/* Adds vertical spacing around the main upload form */
+.form-section {
+  padding: 56px 0;
+  /* Adds space above and below the form section */
+}
+
+/* Two-column grid layout for the JD card and upload card */
+.form-grid {
+  display: grid;
+  /* Uses CSS Grid for the two-column layout */
+  grid-template-columns: 1fr 1fr;
+  /* Creates two equal-width columns */
+  gap: 22px;
+  /* Adds space between the two form cards */
+  margin-bottom: 28px;
+  /* Adds space below the form grid */
+}
+
+/* Styles each white card in the form section */
+.form-card {
+  background: var(--surface);
+  /* Fills the card with the surface background */
+  border: 1px solid var(--border);
+  /* Draws a border around the card */
+  border-radius: 16px;
+  /* Rounds the card corners */
+  padding: 26px;
+  /* Adds internal padding inside the card */
+  transition: border-color .2s;
+  /* Smoothly animates border color on hover */
+}
+
+/* Highlights the form card border on hover */
+.form-card:hover {
+  border-color: var(--accent);
+  /* Changes the border to emerald on hover */
+}
+
+/* Styles the header row at the top of each form card */
+.card-header {
+  display: flex;
+  /* Places icon and text side by side */
+  align-items: flex-start;
+  /* Aligns icon to the top of the text block */
+  gap: 14px;
+  /* Adds space between the icon and the heading text */
+  margin-bottom: 22px;
+  /* Adds space below the header */
+  padding-bottom: 18px;
+  /* Adds padding before the divider line */
+  border-bottom: 1px solid var(--border);
+  /* Draws a divider line below the header */
+}
+
+/* Styles the icon displayed in each card header */
+.card-icon {
+  font-size: 1.4rem;
+  /* Makes the card icon larger than body text */
+  color: var(--accent);
+  /* Colors the icon with the emerald accent */
+  margin-top: 2px;
+  /* Nudges the icon down to align with the title */
+}
+
+/* Styles the card title text */
+.card-title {
+  font-size: 1.1rem;
+  /* Makes the card title slightly larger than body text */
+  font-weight: 700;
+  /* Makes the card title bold */
+  margin-bottom: 3px;
+  /* Adds a tiny gap between the title and subtitle */
+}
+
+/* Styles the subtitle below each card title */
+.card-subtitle {
+  font-size: .8rem;
+  /* Makes the subtitle smaller than body text */
+  color: var(--text-muted);
+  /* Uses muted color for the subtitle */
+}
+
+/* Wraps each label and input with bottom spacing */
+.input-group {
+  margin-bottom: 18px;
+  /* Adds space below each form field group */
+}
+
+/* Styles the small uppercase label above each input */
+.input-label {
+  display: flex;
+  /* Places the icon and label text side by side */
+  align-items: center;
+  /* Vertically centers the icon with the label */
+  gap: 7px;
+  /* Adds space between the icon and the label text */
+  font-size: .8rem;
+  /* Makes the label smaller than body text */
+  font-weight: 600;
+  /* Makes the label semi-bold */
+  color: var(--text-muted);
+  /* Uses muted color for form labels */
+  text-transform: uppercase;
+  /* Converts the label to all uppercase */
+  letter-spacing: .05em;
+  /* Adds letter spacing to the uppercase label */
+  margin-bottom: 7px;
+  /* Adds space below the label before the input */
+}
+
+/* Colors the small icon inside each label */
+.input-label i {
+  color: var(--accent);
+  /* Colors the label icon with the emerald accent */
+}
+
+/* Shared base styles for text inputs, textareas, and selects */
+.text-input,
+.textarea-input,
+.select-input {
+  width: 100%;
+  /* Makes each input fill its container width */
+  background: var(--input-bg);
+  /* Applies the dark input background */
+  border: 1px solid var(--input-border);
+  /* Draws a border around the input */
+  border-radius: 10px;
+  /* Rounds the input corners */
+  color: var(--text);
+  /* Sets input text color to match the theme */
+  font-family: 'DM Sans', sans-serif;
+  /* Ensures inputs use the page font */
+  font-size: .92rem;
+  /* Sets a comfortable reading size for input text */
+  padding: 10px 14px;
+  /* Adds internal padding inside the input */
+  outline: none;
+  /* Removes the default browser focus outline */
+  transition: border-color .2s, box-shadow .2s;
+  /* Animates border and glow on focus */
+}
+
+/* Applies an emerald highlight when an input is focused */
+.text-input:focus,
+.textarea-input:focus,
+.select-input:focus {
+  border-color: var(--input-focus);
+  /* Changes border to emerald on focus */
+  box-shadow: 0 0 0 3px var(--accent-glow);
+  /* Adds a soft emerald glow around focused input */
+}
+
+/* Additional styles specific to the multiline textarea */
+.textarea-input {
+  resize: vertical;
+  /* Allows vertical resize only */
+  min-height: 210px;
+  /* Sets a minimum textarea height */
+  line-height: 1.6;
+  /* Sets comfortable line spacing inside the textarea */
+}
+
+/* Styles the live character counter below the JD textarea */
+.char-counter {
+  display: flex;
+  /* Places count and tip text side by side */
+  justify-content: space-between;
+  /* Pushes count left and tip right */
+  font-size: .76rem;
+  /* Makes the counter text small */
+  color: var(--text-faint);
+  /* Uses the faintest text color */
+  margin-top: 5px;
+  /* Adds a gap between the textarea and counter */
+  font-family: 'DM Mono', monospace;
+  /* Uses monospace font for the number */
+}
+
+/* Removes default dropdown arrow and adds a custom emerald arrow */
+.select-input {
+  cursor: pointer;
+  /* Shows a hand cursor on hover */
+  appearance: none;
+  /* Removes the OS default dropdown arrow */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%2310b981' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+  /* Custom emerald triangle as the dropdown arrow */
+  background-repeat: no-repeat;
+  /* Prevents the arrow from tiling */
+  background-position: right 14px center;
+  /* Positions the arrow on the right side */
+  padding-right: 36px;
+  /* Adds padding so text doesn't overlap the arrow */
+}
+
+/* ── DRAG AND DROP ── */
+/* Styles the dashed file upload drop zone */
+.drop-zone {
+  border: 2px dashed var(--border);
+  /* Draws a dashed border to signal a drop target */
+  border-radius: 12px;
+  /* Rounds the drop zone corners */
+  padding: 32px 20px;
+  /* Adds generous internal padding */
+  text-align: center;
+  /* Centers all content inside the zone */
+  cursor: pointer;
+  /* Shows a hand cursor over the zone */
+  transition: all .2s;
+  /* Smoothly animates all visual changes */
+  margin-bottom: 14px;
+  /* Adds space below the drop zone */
+}
+
+/* Changes appearance when a file is dragged over or hovered */
+.drop-zone.drag-over,
+.drop-zone:hover {
+  border-color: var(--accent);
+  /* Changes the dashed border to emerald */
+  background: var(--accent-light);
+  /* Adds a faint emerald background tint */
+}
+
+/* Styles the large upload cloud icon inside the drop zone */
+.drop-icon {
+  font-size: 2.4rem;
+  /* Makes the icon large and prominent */
+  color: var(--text-faint);
+  /* Uses the faintest color so it is subtle */
+  margin-bottom: 12px;
+  /* Adds space below the icon */
+  transition: color .2s;
+  /* Animates color change on hover */
+}
+
+/* Changes the upload icon to emerald when the zone is hovered */
+.drop-zone:hover .drop-icon {
+  color: var(--accent);
+  /* Colors the icon emerald on hover */
+}
+
+/* Styles the main text label inside the drop zone */
+.drop-text {
+  font-size: .92rem;
+  /* Sets a readable size for the drop zone label */
+  font-weight: 600;
+  /* Makes the label semi-bold */
+  color: var(--text-muted);
+  /* Uses muted color for the label */
+  margin-bottom: 4px;
+  /* Adds a small gap below the label */
+}
+
+/* Styles the secondary "or" text inside the drop zone */
+.drop-subtext {
+  font-size: .8rem;
+  /* Makes the separator text smaller */
+  color: var(--text-faint);
+  /* Uses faint color for the separator */
+  margin-bottom: 10px;
+  /* Adds space before the browse button */
+}
+
+/* Hides the actual file input while keeping it functionally clickable */
+.file-input-hidden {
+  display: none;
+  /* Hides the native file input visually */
+}
+
+/* Styles the Browse Files button inside the drop zone */
+.btn-browse {
+  background: var(--accent-light);
+  /* Fills with faint emerald background */
+  color: var(--accent);
+  /* Colors text with emerald accent */
+  border: 1px solid rgba(16, 185, 129, .3);
+  /* Draws a semi-transparent emerald border */
+  border-radius: 8px;
+  /* Rounds the button corners */
+  padding: 8px 20px;
+  /* Adds internal padding */
+  font-size: .84rem;
+  /* Sets button text size */
+  font-weight: 600;
+  /* Makes button text semi-bold */
+  cursor: pointer;
+  /* Shows a hand cursor */
+  font-family: 'DM Sans', sans-serif;
+  /* Uses the page font */
+  transition: all .2s;
+  /* Animates visual changes on hover */
+}
+
+/* Changes browse button to solid emerald on hover */
+.btn-browse:hover {
+  background: var(--accent);
+  /* Fills with solid emerald on hover */
+  color: #fff;
+  /* Changes text to white for contrast */
+}
+
+/* Styles the small hints text at the bottom of the drop zone */
+.drop-hint {
+  font-size: .73rem;
+  /* Makes the hint text very small */
+  color: var(--text-faint);
+  /* Uses the faintest color for hints */
+  margin-top: 10px;
+  /* Adds space above the hint */
+}
+
+/* Stacks the selected file rows vertically */
+.file-list {
+  display: flex;
+  /* Enables flex for vertical stacking */
+  flex-direction: column;
+  /* Arranges file items in a column */
+  gap: 6px;
+  /* Adds space between file rows */
+  margin-bottom: 10px;
+  /* Adds space below the file list */
+}
+
+/* Styles each selected file row showing name and size */
+.file-item {
+  display: flex;
+  /* Places name and size side by side */
+  align-items: center;
+  /* Vertically centers both */
+  justify-content: space-between;
+  /* Pushes name left and size right */
+  background: var(--surface-2);
+  /* Uses secondary surface for file rows */
+  border: 1px solid var(--border);
+  /* Draws a border around each row */
+  border-radius: 8px;
+  /* Rounds the file row corners */
+  padding: 7px 12px;
+  /* Adds internal padding */
+  font-size: .8rem;
+  /* Sets small font for file information */
+}
+
+/* Styles the filename and icon side by side */
+.file-item-name {
+  display: flex;
+  /* Places PDF icon and filename together */
+  align-items: center;
+  /* Vertically centers icon with text */
+  gap: 7px;
+  /* Adds space between icon and name */
+  overflow: hidden;
+  /* Hides text that overflows the container */
+  text-overflow: ellipsis;
+  /* Shows ellipsis when filename is too long */
+  white-space: nowrap;
+  /* Prevents filename from wrapping */
+}
+
+/* Colors the PDF icon red as a conventional file-type indicator */
+.file-item-name i {
+  color: #ef4444;
+  /* Makes the PDF icon red */
+}
+
+/* Styles the file size shown on the right of each file row */
+.file-item-size {
+  font-family: 'DM Mono', monospace;
+  /* Uses monospace font for aligned sizes */
+  font-size: .73rem;
+  /* Makes the size text smaller */
+  color: var(--text-faint);
+  /* Uses faintest color for size text */
+  flex-shrink: 0;
+  /* Prevents size from being squeezed */
+}
+
+/* Styles the file count bar shown after files are selected */
+.file-count-bar {
+  display: flex;
+  /* Arranges icon, count, and clear button in a row */
+  align-items: center;
+  /* Vertically centers all elements */
+  gap: 8px;
+  /* Adds space between elements */
+  font-size: .82rem;
+  /* Sets a small font for the count text */
+  color: var(--accent);
+  /* Colors count text with the emerald accent */
+  padding: 6px 0;
+  /* Adds vertical padding */
+}
+
+/* Styles the Clear All link inside the count bar */
+.btn-clear-files {
+  margin-left: auto;
+  /* Pushes the clear button to the far right */
+  background: none;
+  /* Removes button background */
+  border: none;
+  /* Removes button border */
+  color: var(--text-faint);
+  /* Colors the link with faint text */
+  font-size: .76rem;
+  /* Makes the link text small */
+  cursor: pointer;
+  /* Shows a hand cursor */
+  text-decoration: underline;
+  /* Underlines the link */
+  font-family: 'DM Sans', sans-serif;
+  /* Uses the page font */
+}
+
+/* Changes clear button to red on hover as a destructive action warning */
+.btn-clear-files:hover {
+  color: var(--score-low);
+  /* Colors the link red on hover */
+}
+
+/* Styles the tips checklist box below the upload zone */
+.requirements-box {
+  background: var(--accent-light);
+  /* Fills with faint emerald background */
+  border: 1px solid rgba(16, 185, 129, .12);
+  /* Draws a subtle emerald border */
+  border-radius: 10px;
+  /* Rounds the tips box corners */
+  padding: 14px 16px;
+  /* Adds internal padding */
+  margin-top: 14px;
+  /* Adds space above the tips box */
+}
+
+/* Styles the title row of the tips checklist */
+.req-title {
+  font-size: .78rem;
+  /* Makes the title small */
+  font-weight: 600;
+  /* Makes the title semi-bold */
+  color: var(--accent);
+  /* Colors the title with the emerald accent */
+  margin-bottom: 8px;
+  /* Adds space below the title */
+}
+
+/* Stacks the tips list vertically */
+.req-list {
+  display: flex;
+  /* Enables flexbox for stacking */
+  flex-direction: column;
+  /* Stacks tips vertically */
+  gap: 5px;
+  /* Adds space between each tip */
+}
+
+/* Styles each tip item with icon and text */
+.req-list li {
+  display: flex;
+  /* Places checkmark and text side by side */
+  align-items: center;
+  /* Vertically centers icon with text */
+  gap: 8px;
+  /* Adds space between icon and tip text */
+  font-size: .78rem;
+  /* Makes tip text small */
+  color: var(--text-muted);
+  /* Uses muted color for tip text */
+}
+
+/* Styles the checkmark icon inside each tip */
+.req-list li i {
+  color: var(--accent);
+  /* Colors the checkmark emerald */
+  font-size: .7rem;
+  /* Makes the checkmark slightly smaller than tip text */
+}
+
+/* ── SUBMIT BUTTON ── */
+/* Centers the submit button and hint text below the form */
+.submit-row {
+  display: flex;
+  /* Enables flexbox for centering */
+  flex-direction: column;
+  /* Stacks button above the hint */
+  align-items: center;
+  /* Centers both horizontally */
+  gap: 10px;
+  /* Adds space between button and hint */
+  margin-bottom: 32px;
+  /* Adds space below the submit row */
+}
+
+/* Styles the large primary action button */
+.btn-submit {
+  background: var(--accent);
+  /* Fills with solid emerald */
+  color: #fff;
+  /* White text for contrast on emerald */
+  border: none;
+  /* Removes any border */
+  border-radius: 12px;
+  /* Rounds the button corners */
+  padding: 15px 48px;
+  /* Adds generous padding to make the button large */
+  font-family: 'Syne', sans-serif;
+  /* Uses Syne font for the button label */
+  font-size: 1rem;
+  /* Sets standard body size for button text */
+  font-weight: 700;
+  /* Makes button text bold */
+  cursor: pointer;
+  /* Shows hand cursor */
+  letter-spacing: .02em;
+  /* Adds slight letter spacing */
+  transition: all .2s;
+  /* Animates all visual changes on hover */
+  box-shadow: 0 4px 20px var(--accent-glow);
+  /* Adds a soft emerald glow */
+}
+
+/* Lifts the button and deepens the glow on hover */
+.btn-submit:hover {
+  background: var(--accent-hover);
+  /* Darkens to hover shade */
+  transform: translateY(-2px);
+  /* Lifts the button 2 pixels up */
+  box-shadow: 0 8px 28px var(--accent-glow);
+  /* Deepens the glow on hover */
+}
+
+/* Presses the button down on click */
+.btn-submit:active {
+  transform: translateY(0);
+  /* Returns to normal position on click */
+}
+
+/* Styles the hint text below the submit button */
+.submit-hint {
+  font-size: .78rem;
+  /* Makes the hint text smaller than body text */
+  color: var(--text-faint);
+  /* Uses faintest color for the hint */
+}
+
+/* Styles all flash notification messages */
+.flash {
+  display: flex;
+  /* Places icon and text side by side */
+  align-items: center;
+  /* Vertically centers icon with text */
+  gap: 10px;
+  /* Adds space between icon and message */
+  padding: 11px 15px;
+  /* Adds internal padding */
+  border-radius: 10px;
+  /* Rounds the flash corners */
+  font-size: .87rem;
+  /* Sets readable font size */
+  font-weight: 500;
+  /* Medium weight for message text */
+}
+
+/* Styles error flash messages with a red tint */
+.flash-error {
+  background: rgba(239, 68, 68, .1);
+  /* Faint red background */
+  border: 1px solid rgba(239, 68, 68, .3);
+  /* Semi-transparent red border */
+  color: var(--score-low);
+  /* Red text color */
+}
+
+/* Styles success flash messages with an emerald tint */
+.flash-success {
+  background: rgba(16, 185, 129, .1);
+  /* Faint emerald background */
+  border: 1px solid rgba(16, 185, 129, .3);
+  /* Semi-transparent emerald border */
+  color: var(--accent);
+  /* Emerald text color */
+}
+
+/* ── HOW IT WORKS ── */
+/* Styles the three-step explainer section at the bottom of the page */
+.how-it-works {
+  padding: 56px 0 72px;
+  /* Adds generous vertical padding */
+  background: var(--surface);
+  /* Fills with card surface color */
+  border-top: 1px solid var(--border);
+  /* Draws a line above the section */
+}
+
+/* Styles the large section heading */
+.section-title {
+  font-size: 1.9rem;
+  /* Makes the title large and prominent */
+  font-weight: 800;
+  /* Makes the title as bold as possible */
+  text-align: center;
+  /* Centers the title */
+  margin-bottom: 8px;
+  /* Adds space below the title */
+}
+
+/* Styles the supporting subtitle below the section title */
+.section-subtitle {
+  text-align: center;
+  /* Centers the subtitle */
+  color: var(--text-muted);
+  /* Uses muted color for the subtitle */
+  margin-bottom: 38px;
+  /* Adds space below subtitle before step cards */
+}
+
+/* Three-column grid for the How It Works step cards */
+.steps-grid {
+  display: grid;
+  /* Uses CSS Grid */
+  grid-template-columns: repeat(3, 1fr);
+  /* Three equal columns */
+  gap: 18px;
+  /* Adds space between step cards */
+  max-width: 860px;
+  /* Limits the grid width */
+  margin: 0 auto;
+  /* Centers the grid */
+}
+
+/* Styles each step card */
+.step-card {
+  background: var(--bg);
+  /* Fills with page background color */
+  border: 1px solid var(--border);
+  /* Draws a border around the card */
+  border-radius: 14px;
+  /* Rounds the card corners */
+  padding: 26px 22px;
+  /* Adds internal padding */
+  text-align: center;
+  /* Centers card content */
+  position: relative;
+  /* Positioning context for the step number */
+  transition: border-color .2s, transform .2s;
+  /* Animates border and lift on hover */
+}
+
+/* Lifts and highlights the step card on hover */
+.step-card:hover {
+  border-color: var(--accent);
+  /* Changes border to emerald on hover */
+  transform: translateY(-3px);
+  /* Lifts the card 3 pixels up */
+}
+
+/* Styles the small step number in the top-left of each card */
+.step-number {
+  position: absolute;
+  /* Positioned relative to the step card */
+  top: 12px;
+  /* Near the top of the card */
+  left: 16px;
+  /* Near the left of the card */
+  font-family: 'DM Mono', monospace;
+  /* Monospace font for the number */
+  font-size: .68rem;
+  /* Very small size for the step number */
+  color: var(--text-faint);
+  /* Faintest color for the number */
+  letter-spacing: .1em;
+  /* Wide letter spacing for the number */
+}
+
+/* Styles the icon in each step card */
+.step-icon {
+  font-size: 1.7rem;
+  /* Makes the icon large */
+  color: var(--accent);
+  /* Colors it with the emerald accent */
+  margin-bottom: 12px;
+  /* Adds space below the icon */
+}
+
+/* Styles the step title */
+.step-title {
+  font-size: .95rem;
+  /* Sets a readable title size */
+  font-weight: 700;
+  /* Makes the title bold */
+  margin-bottom: 7px;
+  /* Adds space below the title */
+}
+
+/* Styles the step description text */
+.step-desc {
+  font-size: .8rem;
+  /* Small readable size */
+  color: var(--text-muted);
+  /* Muted color for description */
+  line-height: 1.6;
+  /* Comfortable line spacing */
+}
+
+/* ── RESULTS PAGE ── */
+/* Styles the header area of the results view */
+.results-hero {
+  padding: 36px 0 22px;
+  /* Adds vertical padding above and below */
+  border-bottom: 1px solid var(--border);
+  /* Draws a dividing line below */
+  margin-bottom: 28px;
+  /* Adds space below the header */
+}
+
+/* Styles the large results page title */
+.results-title {
+  font-size: 1.7rem;
+  /* Large prominent title */
+  font-weight: 800;
+  /* As bold as possible */
+  margin: 12px 0 8px;
+  /* Adds vertical spacing around the title */
+}
+
+/* Styles the small date and count metadata line */
+.results-meta {
+  font-size: .82rem;
+  /* Smaller than body text */
+  color: var(--text-muted);
+  /* Muted color for metadata */
+  display: flex;
+  /* Side-by-side layout */
+  align-items: center;
+  /* Vertically centered */
+  gap: 8px;
+  /* Space between items */
+}
+
+/* Styles the breadcrumb navigation row */
+.breadcrumb {
+  display: flex;
+  /* Horizontal row */
+  align-items: center;
+  /* Vertically centered */
+  gap: 8px;
+  /* Space between breadcrumb items */
+  font-size: .82rem;
+  /* Small readable size */
+}
+
+/* Styles a clickable breadcrumb link */
+.breadcrumb-link {
+  color: var(--accent);
+  /* Emerald accent color */
+  font-weight: 500;
+  /* Medium weight */
+  transition: opacity .2s;
+  /* Animates opacity on hover */
+}
+
+/* Dims the breadcrumb link on hover */
+.breadcrumb-link:hover {
+  opacity: .7;
+  /* Reduces opacity to 70% on hover */
+}
+
+/* Styles the breadcrumb separator character */
+.breadcrumb-sep {
+  color: var(--text-faint);
+  /* Faintest text color for separator */
+}
+
+/* Styles the non-clickable current page breadcrumb label */
+.breadcrumb-current {
+  color: var(--text-muted);
+  /* Muted color for current page label */
+}
+
+/* Three-column grid for the summary stat cards */
+.summary-cards {
+  display: grid;
+  /* CSS Grid layout */
+  grid-template-columns: repeat(3, 1fr);
+  /* Three equal columns */
+  gap: 14px;
+  /* Space between cards */
+  margin-bottom: 24px;
+  /* Space below the cards */
+}
+
+/* Styles each summary stat card */
+.summary-card {
+  background: var(--surface);
+  /* Surface background */
+  border: 1px solid var(--border);
+  /* Card border */
+  border-radius: 12px;
+  /* Rounded corners */
+  padding: 18px;
+  /* Internal padding */
+  display: flex;
+  /* Icon and info side by side */
+  align-items: center;
+  /* Vertically centered */
+  gap: 14px;
+  /* Space between icon and text */
+}
+
+/* Highlights the middle card (top score) with emerald */
+.summary-card--accent {
+  border-color: var(--accent);
+  /* Solid emerald border */
+  background: var(--accent-light);
+  /* Faint emerald background */
+}
+
+/* Styles the icon container inside each summary card */
+.summary-icon {
+  width: 42px;
+  /* Fixed 42px width */
+  height: 42px;
+  /* Fixed 42px height */
+  background: var(--accent-light);
+  /* Faint emerald fill */
+  border-radius: 10px;
+  /* Rounded corners */
+  display: flex;
+  /* Centers the icon */
+  align-items: center;
+  /* Vertically centered */
+  justify-content: center;
+  /* Horizontally centered */
+  font-size: 1.1rem;
+  /* Icon size */
+  color: var(--accent);
+  /* Emerald icon color */
+  flex-shrink: 0;
+  /* Prevents shrinking */
+}
+
+/* Stacks the number and label vertically */
+.summary-info {
+  display: flex;
+  /* Flexbox for stacking */
+  flex-direction: column;
+  /* Number above label */
+}
+
+/* Styles the large number in each stat card */
+.summary-number {
+  font-family: 'Syne', sans-serif;
+  /* Bold Syne font */
+  font-size: 1.55rem;
+  /* Large prominent number */
+  font-weight: 800;
+  /* As bold as possible */
+  line-height: 1;
+  /* No extra spacing */
+}
+
+/* Styles the label below each summary number */
+.summary-label {
+  font-size: .74rem;
+  /* Smaller than body text */
+  color: var(--text-muted);
+  /* Muted text color */
+  text-transform: uppercase;
+  /* All uppercase */
+  letter-spacing: .05em;
+  /* Letter spacing for label */
+  margin-top: 4px;
+  /* Gap between number and label */
+}
+
+/* Styles the Chart.js chart card */
+.chart-card {
+  background: var(--surface);
+  /* Surface background */
+  border: 1px solid var(--border);
+  /* Card border */
+  border-radius: 14px;
+  /* Rounded corners */
+  padding: 22px;
+  /* Internal padding */
+  margin-bottom: 22px;
+  /* Space below the card */
+}
+
+/* Styles the chart card header row */
+.chart-header {
+  display: flex;
+  /* Title and export button side by side */
+  align-items: center;
+  /* Vertically centered */
+  justify-content: space-between;
+  /* Title left, button right */
+  margin-bottom: 18px;
+  /* Space below the header */
+}
+
+/* Styles the chart title text */
+.chart-title {
+  font-size: .95rem;
+  /* Readable title size */
+  font-weight: 700;
+  /* Bold title */
+  display: flex;
+  /* Icon and title side by side */
+  align-items: center;
+  /* Vertically centered */
+  gap: 8px;
+  /* Space between icon and title */
+}
+
+/* Colors the chart title icon */
+.chart-title i {
+  color: var(--accent);
+  /* Emerald icon color */
+}
+
+/* Fixes the chart height for Chart.js */
+.chart-wrapper {
+  height: 300px;
+  /* Fixed 300px height */
+  position: relative;
+  /* Required by Chart.js for sizing */
+}
+
+/* Styles the Export CSV button */
+.btn-export {
+  display: flex;
+  /* Icon and label side by side */
+  align-items: center;
+  /* Vertically centered */
+  gap: 7px;
+  /* Space between icon and text */
+  background: var(--accent-light);
+  /* Faint emerald background */
+  color: var(--accent);
+  /* Emerald text */
+  border: 1px solid rgba(16, 185, 129, .25);
+  /* Semi-transparent emerald border */
+  border-radius: 8px;
+  /* Rounded corners */
+  padding: 7px 14px;
+  /* Internal padding */
+  font-size: .8rem;
+  /* Small button text */
+  font-weight: 600;
+  /* Semi-bold text */
+  cursor: pointer;
+  /* Hand cursor */
+  font-family: 'DM Sans', sans-serif;
+  /* Page font */
+  transition: all .2s;
+  /* Animate on hover */
+}
+
+/* Changes export button to solid emerald on hover */
+.btn-export:hover {
+  background: var(--accent);
+  /* Solid emerald on hover */
+  color: #fff;
+  /* White text for contrast */
+}
+
+/* Styles the candidates table card */
+.table-card {
+  background: var(--surface);
+  /* Surface background */
+  border: 1px solid var(--border);
+  /* Card border */
+  border-radius: 14px;
+  /* Rounded corners */
+  padding: 22px;
+  /* Internal padding */
+  margin-bottom: 22px;
+  /* Space below the card */
+  overflow: hidden;
+  /* Clips content within rounded corners */
+}
+
+/* Styles the table card header row */
+.table-header {
+  display: flex;
+  /* Title and search box side by side */
+  align-items: center;
+  /* Vertically centered */
+  justify-content: space-between;
+  /* Title left, search right */
+  margin-bottom: 18px;
+  /* Space below header */
+  flex-wrap: wrap;
+  /* Wraps on small screens */
+  gap: 10px;
+  /* Space between wrapped items */
+}
+
+/* Styles the table title */
+.table-title {
+  font-size: .95rem;
+  /* Readable size */
+  font-weight: 700;
+  /* Bold */
+  display: flex;
+  /* Icon and title side by side */
+  align-items: center;
+  /* Vertically centered */
+  gap: 8px;
+  /* Space between icon and title */
+}
+
+/* Colors the table title icon */
+.table-title i {
+  color: var(--accent);
+  /* Emerald icon */
+}
+
+/* Styles the search input container above the table */
+.table-search {
+  display: flex;
+  /* Icon and input side by side */
+  align-items: center;
+  /* Vertically centered */
+  gap: 8px;
+  /* Space between icon and input */
+  background: var(--input-bg);
+  /* Input background color */
+  border: 1px solid var(--input-border);
+  /* Input border */
+  border-radius: 8px;
+  /* Rounded corners */
+  padding: 6px 12px;
+  /* Internal padding */
+  color: var(--text-muted);
+  /* Muted icon color */
+  font-size: .84rem;
+  /* Font size */
+}
+
+/* Styles the text input inside the search container */
+.search-input {
+  background: none;
+  /* No background so container shows through */
+  border: none;
+  /* No border */
+  outline: none;
+  /* No focus outline */
+  color: var(--text);
+  /* Primary text color */
+  font-family: 'DM Sans', sans-serif;
+  /* Page font */
+  font-size: .84rem;
+  /* Font size */
+  width: 170px;
+  /* Fixed width */
+}
+
+/* Enables horizontal scrolling when table is too wide */
+.table-wrapper {
+  overflow-x: auto;
+  /* Horizontal scroll on small screens */
+}
+
+/* Styles the ranked candidates table */
+.candidates-table {
+  width: 100%;
+  /* Full width */
+  border-collapse: collapse;
+  /* Removes gaps between cells */
+  font-size: .87rem;
+  /* Readable cell text size */
+}
+
+/* Styles table header cells */
+.candidates-table th {
+  padding: 9px 13px;
+  /* Cell padding */
+  text-align: left;
+  /* Left-aligned */
+  font-size: .7rem;
+  /* Smaller than body text */
+  text-transform: uppercase;
+  /* All uppercase headers */
+  letter-spacing: .07em;
+  /* Wide letter spacing */
+  color: var(--text-faint);
+  /* Faintest text color */
+  border-bottom: 1px solid var(--border);
+  /* Line below header row */
+  white-space: nowrap;
+  /* Prevents header text from wrapping */
+}
+
+/* Styles table data cells */
+.candidates-table td {
+  padding: 13px;
+  /* Cell padding */
+  border-bottom: 1px solid var(--border);
+  /* Line below each row */
+  vertical-align: middle;
+  /* Vertically centered content */
+}
+
+/* Styles each data row */
+.candidate-row {
+  transition: background .15s;
+  /* Animates background on hover */
+}
+
+/* Highlights row on hover */
+.candidate-row:hover {
+  background: var(--surface-2);
+  /* Slightly lighter background on hover */
+}
+
+/* Removes bottom border from the last row */
+.candidate-row:last-child td {
+  border-bottom: none;
+  /* No divider below the final row */
+}
+
+/* Styles medal icons for top 3 ranked candidates */
+.rank-medal {
+  font-size: 1.05rem;
+  /* Sets the medal icon to a visible size */
+}
+
+/* Gold color for first place */
+.gold {
+  color: #f59e0b;
+  /* Golden amber for first place medal */
+}
+
+/* Silver color for second place */
+.silver {
+  color: #94a3b8;
+  /* Steel grey for second place medal */
+}
+
+/* Bronze color for third place */
+.bronze {
+  color: #b45309;
+  /* Warm brown for third place medal */
+}
+
+/* Styles rank numbers for 4th place and below */
+.rank-number {
+  font-family: 'DM Mono', monospace;
+  /* Monospace font for rank number */
+  font-size: .8rem;
+  /* Smaller than body text */
+  color: var(--text-faint);
+  /* Faintest text color */
+}
+
+/* Styles the bold candidate name in the table */
+.candidate-name {
+  font-weight: 600;
+  /* Semi-bold name text */
+  margin-bottom: 2px;
+  /* Tiny gap below name */
+}
+
+/* Styles the filename below the candidate name */
+.candidate-file {
+  font-size: .73rem;
+  /* Smaller than the name */
+  color: var(--text-faint);
+  /* Faintest text color */
+}
+
+/* Red PDF icon as a conventional file-type indicator */
+.candidate-file i {
+  color: #ef4444;
+  /* Red PDF icon */
+}
+
+/* Stacks the score badge above the mini bar */
+.score-display {
+  display: flex;
+  /* Vertical stacking */
+  flex-direction: column;
+  /* Badge above bar */
+  gap: 5px;
+  /* Gap between badge and bar */
+  min-width: 95px;
+  /* Minimum column width */
+}
+
+/* Styles the score percentage pill badge */
+.score-badge {
+  display: inline-block;
+  /* Shrinks to fit text */
+  padding: 2px 9px;
+  /* Internal padding */
+  border-radius: 100px;
+  /* Fully rounded pill */
+  font-family: 'DM Mono', monospace;
+  /* Monospace for the number */
+  font-size: .8rem;
+  /* Small text */
+  font-weight: 500;
+  /* Medium weight */
+  width: fit-content;
+  /* Shrinks to content */
+}
+
+/* Green badge for high scores */
+.score-high {
+  background: rgba(16, 185, 129, .15);
+  /* Faint green background */
+  color: var(--score-high);
+  /* Green text */
+}
+
+/* Amber badge for mid scores */
+.score-mid {
+  background: rgba(245, 158, 11, .15);
+  /* Faint amber background */
+  color: var(--score-mid);
+  /* Amber text */
+}
+
+/* Red badge for low scores */
+.score-low {
+  background: rgba(239, 68, 68, .15);
+  /* Faint red background */
+  color: var(--score-low);
+  /* Red text */
+}
+
+/* Styles the mini score bar background track */
+.score-bar-mini {
+  height: 4px;
+  /* Very thin bar */
+  background: var(--border);
+  /* Border color for the empty track */
+  border-radius: 100px;
+  /* Rounded ends */
+  overflow: hidden;
+  /* Clips the fill within rounded track */
+}
+
+/* Styles the filled portion of the score bar */
+.score-bar-fill {
+  height: 100%;
+  /* Full height of the track */
+  background: var(--accent);
+  /* Emerald fill color */
+  border-radius: 100px;
+  /* Rounded fill ends */
+  transition: width .6s ease;
+  /* Animates fill expanding from zero */
+}
+
+/* Styles all experience level pill tags */
+.level-tag {
+  display: inline-block;
+  /* Shrinks to fit text */
+  padding: 2px 9px;
+  /* Internal padding */
+  border-radius: 100px;
+  /* Fully rounded pill */
+  font-size: .73rem;
+  /* Small text */
+  font-weight: 600;
+  /* Semi-bold */
+}
+
+/* Green tint for fresher level */
+.level-fresher {
+  background: rgba(16, 185, 129, .1);
+  /* Faint green background */
+  color: var(--score-high);
+  /* Green text */
+}
+
+/* Amber tint for mid level */
+.level-mid {
+  background: rgba(245, 158, 11, .1);
+  /* Faint amber background */
+  color: var(--score-mid);
+  /* Amber text */
+}
+
+/* Indigo tint for senior level */
+.level-senior {
+  background: rgba(99, 102, 241, .1);
+  /* Faint indigo background */
+  color: #818cf8;
+  /* Soft indigo text */
+}
+
+/* Styles matched skill pill badges in the table */
+.skill-pill {
+  display: inline-block;
+  /* Shrinks to fit text */
+  background: var(--accent-light);
+  /* Faint emerald background */
+  color: var(--accent);
+  /* Emerald text */
+  border: 1px solid rgba(16, 185, 129, .18);
+  /* Subtle emerald border */
+  border-radius: 100px;
+  /* Fully rounded pill */
+  padding: 2px 9px;
+  /* Internal padding */
+  font-size: .7rem;
+  /* Very small text */
+  font-weight: 500;
+  /* Medium weight */
+  margin: 2px;
+  /* Tiny gap around each pill */
+}
+
+/* Styles the overflow indicator when there are too many skills */
+.skill-more {
+  font-size: .7rem;
+  /* Very small text */
+  color: var(--text-faint);
+  /* Faintest text color */
+  font-style: italic;
+  /* Italicized overflow indicator */
+}
+
+/* Styles the View button in the action column */
+.btn-view {
+  display: inline-flex;
+  /* Icon and label side by side */
+  align-items: center;
+  /* Vertically centered */
+  gap: 5px;
+  /* Space between icon and text */
+  background: var(--accent-light);
+  /* Faint emerald background */
+  color: var(--accent);
+  /* Emerald text */
+  border: 1px solid rgba(16, 185, 129, .2);
+  /* Subtle emerald border */
+  border-radius: 7px;
+  /* Rounded corners */
+  padding: 5px 13px;
+  /* Internal padding */
+  font-size: .78rem;
+  /* Small text */
+  font-weight: 600;
+  /* Semi-bold */
+  cursor: pointer;
+  /* Hand cursor */
+  font-family: 'DM Sans', sans-serif;
+  /* Page font */
+  transition: all .2s;
+  /* Animate on hover */
+  white-space: nowrap;
+  /* Prevent text wrapping */
+}
+
+/* Changes View button to solid emerald on hover */
+.btn-view:hover {
+  background: var(--accent);
+  /* Solid emerald on hover */
+  color: #fff;
+  /* White text for contrast */
+}
+
+/* Styles the empty table state when no candidates are shown */
+.empty-state {
+  text-align: center;
+  /* Centers content */
+  padding: 60px 20px !important;
+  /* Generous padding */
+  color: var(--text-faint);
+  /* Faintest text color */
+}
+
+/* Makes the empty state icon large and block-level */
+.empty-state i {
+  font-size: 2.4rem;
+  /* Large icon */
+  margin-bottom: 12px;
+  /* Space below icon */
+  display: block;
+  /* Icon on its own line */
+}
+
+/* Styles the skills gap summary card */
+.gap-card {
+  background: var(--surface);
+  /* Surface background */
+  border: 1px solid var(--border);
+  /* Card border */
+  border-radius: 14px;
+  /* Rounded corners */
+  padding: 22px;
+  /* Internal padding */
+  margin-bottom: 56px;
+  /* Space below card */
+}
+
+/* Styles the gap card title */
+.gap-title {
+  font-size: .95rem;
+  /* Readable size */
+  font-weight: 700;
+  /* Bold */
+  margin-bottom: 5px;
+  /* Gap below title */
+  display: flex;
+  /* Icon and text side by side */
+  align-items: center;
+  /* Vertically centered */
+  gap: 8px;
+  /* Space between icon and title */
+}
+
+/* Amber warning icon in gap title */
+.gap-title i {
+  color: var(--score-mid);
+  /* Amber color for warning icon */
+}
+
+/* Styles the gap card subtitle */
+.gap-subtitle {
+  font-size: .8rem;
+  /* Smaller than body text */
+  color: var(--text-muted);
+  /* Muted text color */
+  margin-bottom: 14px;
+  /* Space below subtitle */
+}
+
+/* Wraps gap skill pills */
+.gap-pills {
+  display: flex;
+  /* Horizontal row */
+  flex-wrap: wrap;
+  /* Wraps to new lines */
+  gap: 8px;
+  /* Space between pills */
+}
+
+/* Styles each missing skill pill with a red tint */
+.gap-pill {
+  background: rgba(239, 68, 68, .1);
+  /* Faint red background */
+  color: var(--score-low);
+  /* Red text */
+  border: 1px solid rgba(239, 68, 68, .2);
+  /* Subtle red border */
+  border-radius: 100px;
+  /* Fully rounded pill */
+  padding: 3px 11px;
+  /* Internal padding */
+  font-size: .76rem;
+  /* Small text */
+  font-weight: 500;
+  /* Medium weight */
+}
+
+/* ── CANDIDATE DETAIL ── */
+/* Styles the header of the candidate detail view */
+.detail-hero {
+  padding: 36px 0 24px;
+  /* Vertical padding */
+  border-bottom: 1px solid var(--border);
+  /* Dividing line below */
+  margin-bottom: 28px;
+  /* Space below header */
+}
+
+/* Two-column layout for candidate info and score circle */
+.detail-header {
+  display: flex;
+  /* Side by side columns */
+  align-items: center;
+  /* Vertically centered */
+  justify-content: space-between;
+  /* Info left, score right */
+  margin-top: 18px;
+  /* Space above */
+  flex-wrap: wrap;
+  /* Stacks on small screens */
+  gap: 18px;
+  /* Space between columns */
+}
+
+/* Avatar and name text side by side */
+.detail-info {
+  display: flex;
+  /* Side by side */
+  align-items: center;
+  /* Vertically centered */
+  gap: 16px;
+  /* Space between avatar and text */
+}
+
+/* Circular initials avatar */
+.candidate-avatar {
+  width: 56px;
+  /* Fixed 56px width */
+  height: 56px;
+  /* Fixed 56px height */
+  background: var(--accent);
+  /* Emerald fill */
+  color: #fff;
+  /* White initials */
+  border-radius: 50%;
+  /* Perfect circle */
+  display: flex;
+  /* Centers initials */
+  align-items: center;
+  /* Vertically centered */
+  justify-content: center;
+  /* Horizontally centered */
+  font-family: 'Syne', sans-serif;
+  /* Bold Syne font for initials */
+  font-size: 1.2rem;
+  /* Readable initials size */
+  font-weight: 800;
+  /* As bold as possible */
+  flex-shrink: 0;
+  /* Prevents shrinking */
+}
+
+/* Styles the candidate name in the detail header */
+.detail-name {
+  font-size: 1.55rem;
+  /* Large prominent name */
+  font-weight: 800;
+  /* As bold as possible */
+  margin-bottom: 5px;
+  /* Gap below name */
+}
+
+/* Styles the metadata row below the candidate name */
+.detail-meta {
+  font-size: .8rem;
+  /* Smaller than body text */
+  color: var(--text-muted);
+  /* Muted text color */
+  display: flex;
+  /* Side by side elements */
+  align-items: center;
+  /* Vertically centered */
+  gap: 8px;
+  /* Space between elements */
+  flex-wrap: wrap;
+  /* Wraps on small screens */
+}
+
+/* Wraps the score circle and rank text */
+.score-circle-wrapper {
+  text-align: center;
+  /* Centers content */
+  flex-shrink: 0;
+  /* Prevents shrinking */
+}
+
+/* Styles the large circular score indicator */
+.score-circle {
+  width: 96px;
+  /* Fixed 96px width */
+  height: 96px;
+  /* Fixed 96px height */
+  border-radius: 50%;
+  /* Perfect circle */
+  border: 4px solid;
+  /* Thick border (color set by modifier class) */
+  display: flex;
+  /* Centers content */
+  flex-direction: column;
+  /* Number above label */
+  align-items: center;
+  /* Horizontally centered */
+  justify-content: center;
+  /* Vertically centered */
+  margin: 0 auto 7px;
+  /* Centered with space below */
+}
+
+/* Green border for high score circles */
+.score-circle--high {
+  border-color: var(--score-high);
+  /* Green border */
+}
+
+/* Amber border for mid score circles */
+.score-circle--mid {
+  border-color: var(--score-mid);
+  /* Amber border */
+}
+
+/* Red border for low score circles */
+.score-circle--low {
+  border-color: var(--score-low);
+  /* Red border */
+}
+
+/* Styles the percentage number inside the score circle */
+.score-circle-number {
+  font-family: 'Syne', sans-serif;
+  /* Bold Syne font */
+  font-size: 1.4rem;
+  /* Large prominent number */
+  font-weight: 800;
+  /* As bold as possible */
+  line-height: 1;
+  /* No extra spacing */
+}
+
+/* Green number for high score circles */
+.score-circle--high .score-circle-number {
+  color: var(--score-high);
+  /* Green text */
+}
+
+/* Amber number for mid score circles */
+.score-circle--mid .score-circle-number {
+  color: var(--score-mid);
+  /* Amber text */
+}
+
+/* Red number for low score circles */
+.score-circle--low .score-circle-number {
+  color: var(--score-low);
+  /* Red text */
+}
+
+/* Styles the small Match label inside the score circle */
+.score-circle-label {
+  font-size: .68rem;
+  /* Very small text */
+  color: var(--text-muted);
+  /* Muted text color */
+  text-transform: uppercase;
+  /* All uppercase */
+  letter-spacing: .1em;
+  /* Wide letter spacing */
+}
+
+/* Styles the rank text below the score circle */
+.score-rank {
+  font-size: .76rem;
+  /* Small text */
+  color: var(--text-faint);
+  /* Faintest text color */
+}
+
+/* Two-column grid for matched and missing skill cards */
+.skills-grid {
+  display: grid;
+  /* CSS Grid */
+  grid-template-columns: 1fr 1fr;
+  /* Two equal columns */
+  gap: 18px;
+  /* Space between cards */
+  margin-bottom: 22px;
+  /* Space below grid */
+}
+
+/* Styles each skill card */
+.skills-card {
+  background: var(--surface);
+  /* Surface background */
+  border: 1px solid var(--border);
+  /* Card border */
+  border-radius: 14px;
+  /* Rounded corners */
+  padding: 20px;
+  /* Internal padding */
+}
+
+/* Green left accent border for matched skills card */
+.skills-card--matched {
+  border-left: 3px solid var(--score-high);
+  /* Thick green left border */
+}
+
+/* Red left accent border for missing skills card */
+.skills-card--missing {
+  border-left: 3px solid var(--score-low);
+  /* Thick red left border */
+}
+
+/* Styles the skill card header row */
+.skills-card-header {
+  display: flex;
+  /* Icon, title, count side by side */
+  align-items: center;
+  /* Vertically centered */
+  gap: 10px;
+  /* Space between elements */
+  margin-bottom: 14px;
+  /* Space below header */
+}
+
+/* Green checkmark icon in matched card header */
+.skills-card--matched .skills-card-header i {
+  color: var(--score-high);
+  /* Green icon */
+}
+
+/* Red X icon in missing card header */
+.skills-card--missing .skills-card-header i {
+  color: var(--score-low);
+  /* Red icon */
+}
+
+/* Styles the skill card header title */
+.skills-card-header h2 {
+  font-size: .92rem;
+  /* Readable size */
+  font-weight: 700;
+  /* Bold */
+}
+
+/* Styles the count badge at the end of the skill card header */
+.skills-count {
+  margin-left: auto;
+  /* Pushes to far right */
+  background: var(--surface-2);
+  /* Secondary surface */
+  border: 1px solid var(--border);
+  /* Border around badge */
+  border-radius: 100px;
+  /* Rounded pill */
+  padding: 2px 9px;
+  /* Internal padding */
+  font-size: .73rem;
+  /* Small text */
+  font-family: 'DM Mono', monospace;
+  /* Monospace for count number */
+  color: var(--text-muted);
+  /* Muted text color */
+}
+
+/* Wraps skill pills in a flexible wrapping container */
+.skills-pills {
+  display: flex;
+  /* Horizontal row */
+  flex-wrap: wrap;
+  /* Wraps to new lines */
+  gap: 7px;
+  /* Space between pills */
+}
+
+/* Green tint for matched skill pills */
+.skill-pill--matched {
+  background: rgba(16, 185, 129, .1);
+  /* Faint green background */
+  color: var(--score-high);
+  /* Green text */
+  border: 1px solid rgba(16, 185, 129, .22);
+  /* Subtle green border */
+}
+
+/* Red tint for missing skill pills */
+.skill-pill--missing {
+  background: rgba(239, 68, 68, .1);
+  /* Faint red background */
+  color: var(--score-low);
+  /* Red text */
+  border: 1px solid rgba(239, 68, 68, .22);
+  /* Subtle red border */
+}
+
+/* Styles the empty message when a skills list has no items */
+.skills-empty {
+  font-size: .8rem;
+  /* Small text */
+  color: var(--text-faint);
+  /* Faintest text color */
+  font-style: italic;
+  /* Italicized empty message */
+}
+
+/* Styles the extracted resume text card */
+.resume-text-card {
+  background: var(--surface);
+  /* Surface background */
+  border: 1px solid var(--border);
+  /* Card border */
+  border-radius: 14px;
+  /* Rounded corners */
+  padding: 22px;
+  /* Internal padding */
+  margin-bottom: 22px;
+  /* Space below card */
+}
+
+/* Styles the resume text card header row */
+.resume-text-header {
+  display: flex;
+  /* Title and copy button side by side */
+  align-items: center;
+  /* Vertically centered */
+  justify-content: space-between;
+  /* Title left, button right */
+  margin-bottom: 14px;
+  /* Space below header */
+}
+
+/* Styles the title inside the resume text header */
+.resume-text-header h2 {
+  font-size: .95rem;
+  /* Readable size */
+  font-weight: 700;
+  /* Bold */
+  display: flex;
+  /* Icon and title side by side */
+  align-items: center;
+  /* Vertically centered */
+  gap: 8px;
+  /* Space between icon and title */
+}
+
+/* Colors the document icon in the header */
+.resume-text-header h2 i {
+  color: var(--accent);
+  /* Emerald icon */
+}
+
+/* Styles the Copy Text button */
+.btn-copy {
+  display: flex;
+  /* Icon and text side by side */
+  align-items: center;
+  /* Vertically centered */
+  gap: 6px;
+  /* Space between icon and label */
+  background: var(--surface-2);
+  /* Secondary surface background */
+  border: 1px solid var(--border);
+  /* Border around button */
+  border-radius: 7px;
+  /* Rounded corners */
+  padding: 5px 11px;
+  /* Internal padding */
+  font-size: .76rem;
+  /* Small text */
+  color: var(--text-muted);
+  /* Muted text color */
+  cursor: pointer;
+  /* Hand cursor */
+  font-family: 'DM Sans', sans-serif;
+  /* Page font */
+  transition: all .2s;
+  /* Animate on hover */
+}
+
+/* Highlights the copy button with emerald on hover */
+.btn-copy:hover {
+  border-color: var(--accent);
+  /* Emerald border on hover */
+  color: var(--accent);
+  /* Emerald text on hover */
+}
+
+/* Styles the highlighted/raw text toggle container */
+.text-view-toggle {
+  display: flex;
+  /* Buttons side by side */
+  gap: 3px;
+  /* Tiny gap between buttons */
+  background: var(--surface-2);
+  /* Secondary surface background */
+  border: 1px solid var(--border);
+  /* Border around toggle group */
+  border-radius: 8px;
+  /* Rounded corners */
+  padding: 3px;
+  /* Small padding inside */
+  width: fit-content;
+  /* Shrinks to wrap buttons */
+  margin-bottom: 14px;
+  /* Space below toggle */
+}
+
+/* Styles each toggle button */
+.toggle-btn {
+  background: none;
+  /* No background for inactive button */
+  border: none;
+  /* No border */
+  border-radius: 6px;
+  /* Rounded corners */
+  padding: 5px 13px;
+  /* Internal padding */
+  font-size: .76rem;
+  /* Small text */
+  font-weight: 500;
+  /* Medium weight */
+  color: var(--text-muted);
+  /* Muted color when inactive */
+  cursor: pointer;
+  /* Hand cursor */
+  font-family: 'DM Sans', sans-serif;
+  /* Page font */
+  transition: all .2s;
+  /* Animate on switch */
+  display: flex;
+  /* Icon and label side by side */
+  align-items: center;
+  /* Vertically centered */
+  gap: 5px;
+  /* Space between icon and label */
+}
+
+/* Highlights the active toggle with solid emerald */
+.toggle-btn.active {
+  background: var(--accent);
+  /* Solid emerald fill */
+  color: #fff;
+  /* White text */
+}
+
+/* Styles the scrollable resume text display */
+.resume-text {
+  background: var(--input-bg);
+  /* Input background color */
+  border: 1px solid var(--border);
+  /* Border around text area */
+  border-radius: 10px;
+  /* Rounded corners */
+  padding: 18px;
+  /* Internal padding */
+  font-family: 'DM Mono', monospace;
+  /* Monospace font for resume text */
+  font-size: .77rem;
+  /* Very small text for density */
+  line-height: 1.9;
+  /* Generous line spacing */
+  color: var(--text-muted);
+  /* Muted text color */
+  white-space: pre-wrap;
+  /* Preserves line breaks from PDF */
+  overflow-y: auto;
+  /* Vertical scroll for long text */
+  max-height: 400px;
+  /* Maximum height before scrolling */
+}
+
+/* Styles highlighted keyword marks in resume text */
+.resume-text mark {
+  background: rgba(16, 185, 129, .2);
+  /* Faint emerald highlight */
+  color: var(--accent);
+  /* Emerald keyword text */
+  border-radius: 3px;
+  /* Slightly rounded highlight */
+  padding: 1px 3px;
+  /* Tiny padding around keyword */
+}
+
+/* Styles the bottom row with Back and Email buttons */
+.action-row {
+  display: flex;
+  /* Buttons side by side */
+  justify-content: space-between;
+  /* Back left, email right */
+  align-items: center;
+  /* Vertically centered */
+  padding: 0 0 56px;
+  /* Bottom padding before footer */
+  flex-wrap: wrap;
+  /* Stacks on small screens */
+  gap: 12px;
+  /* Space between buttons */
+}
+
+/* Styles the secondary outlined back button */
+.btn-secondary {
+  display: inline-flex;
+  /* Icon and label side by side */
+  align-items: center;
+  /* Vertically centered */
+  gap: 7px;
+  /* Space between icon and text */
+  background: var(--surface);
+  /* Surface background */
+  border: 1px solid var(--border);
+  /* Border around button */
+  border-radius: 10px;
+  /* Rounded corners */
+  padding: 9px 20px;
+  /* Internal padding */
+  font-size: .86rem;
+  /* Readable font size */
+  font-weight: 600;
+  /* Semi-bold */
+  color: var(--text-muted);
+  /* Muted text color */
+  cursor: pointer;
+  /* Hand cursor */
+  font-family: 'DM Sans', sans-serif;
+  /* Page font */
+  transition: all .2s;
+  /* Animate on hover */
+}
+
+/* Highlights secondary button with emerald on hover */
+.btn-secondary:hover {
+  border-color: var(--accent);
+  /* Emerald border on hover */
+  color: var(--accent);
+  /* Emerald text on hover */
+}
+
+/* Styles the primary filled action button */
+.btn-primary {
+  display: inline-flex;
+  /* Icon and label side by side */
+  align-items: center;
+  /* Vertically centered */
+  gap: 7px;
+  /* Space between icon and text */
+  background: var(--accent);
+  /* Solid emerald fill */
+  color: #fff;
+  /* White text */
+  border: none;
+  /* No border */
+  border-radius: 10px;
+  /* Rounded corners */
+  padding: 9px 22px;
+  /* Internal padding */
+  font-size: .86rem;
+  /* Readable size */
+  font-weight: 600;
+  /* Semi-bold */
+  transition: all .2s;
+  /* Animate on hover */
+}
+
+/* Darkens the primary button on hover */
+.btn-primary:hover {
+  background: var(--accent-hover);
+  /* Hover shade of emerald */
+}
+
+/* ── HISTORY PAGE ── */
+/* Styles the history page header section */
+.page-header {
+  padding: 36px 0 24px;
+  /* Vertical padding */
+  border-bottom: 1px solid var(--border);
+  /* Line below header */
+  margin-bottom: 32px;
+  /* Space below */
+}
+
+/* Styles the large history page title */
+.page-title {
+  font-size: 1.9rem;
+  /* Large prominent title */
+  font-weight: 800;
+  /* As bold as possible */
+  display: flex;
+  /* Icon and title side by side */
+  align-items: center;
+  /* Vertically centered */
+  gap: 12px;
+  /* Space between icon and title */
+  margin-bottom: 7px;
+  /* Gap below title */
+}
+
+/* Emerald clock icon in the history title */
+.page-title i {
+  color: var(--accent);
+  /* Emerald icon color */
+}
+
+/* Styles the subtitle below the history title */
+.page-subtitle {
+  font-size: .86rem;
+  /* Smaller than body text */
+  color: var(--text-muted);
+  /* Muted text color */
+}
+
+/* Styles the search and count bar above the session grid */
+.history-controls {
+  display: flex;
+  /* Search and count side by side */
+  align-items: center;
+  /* Vertically centered */
+  justify-content: space-between;
+  /* Search left, count right */
+  margin-bottom: 22px;
+  /* Space below controls */
+  flex-wrap: wrap;
+  /* Wraps on small screens */
+  gap: 10px;
+  /* Space between wrapped items */
+}
+
+/* Styles the history search input container */
+.history-search {
+  display: flex;
+  /* Icon and input side by side */
+  align-items: center;
+  /* Vertically centered */
+  gap: 8px;
+  /* Space between icon and input */
+  background: var(--input-bg);
+  /* Input background */
+  border: 1px solid var(--input-border);
+  /* Input border */
+  border-radius: 8px;
+  /* Rounded corners */
+  padding: 7px 13px;
+  /* Internal padding */
+  color: var(--text-muted);
+  /* Muted icon color */
+  font-size: .84rem;
+  /* Font size */
+}
+
+/* Styles the session count label */
+.history-count {
+  font-size: .8rem;
+  /* Small text */
+  color: var(--text-faint);
+  /* Faintest text color */
+  font-family: 'DM Mono', monospace;
+  /* Monospace for the number */
+}
+
+/* Responsive auto-filling grid for session cards */
+.history-grid {
+  display: grid;
+  /* CSS Grid */
+  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  /* Responsive columns with 330px minimum */
+  gap: 16px;
+  /* Space between session cards */
+  margin-bottom: 56px;
+  /* Space below grid */
+}
+
+/* Styles each session card */
+.history-card {
+  background: var(--surface);
+  /* Surface background */
+  border: 1px solid var(--border);
+  /* Card border */
+  border-radius: 14px;
+  /* Rounded corners */
+  padding: 18px;
+  /* Internal padding */
+  display: flex;
+  /* Vertical stacking */
+  flex-direction: column;
+  /* Stacks sections top to bottom */
+  gap: 14px;
+  /* Space between sections */
+  transition: border-color .2s, transform .2s;
+  /* Animate border and lift on hover */
+}
+
+/* Lifts and highlights session card on hover */
+.history-card:hover {
+  border-color: var(--accent);
+  /* Emerald border on hover */
+  transform: translateY(-2px);
+  /* Lifts card 2px on hover */
+}
+
+/* Styles the top row of the session card */
+.history-card-top {
+  display: flex;
+  /* Job info and badge side by side */
+  align-items: flex-start;
+  /* Aligned to top */
+  justify-content: space-between;
+  /* Info left, badge right */
+  gap: 10px;
+  /* Space between elements */
+}
+
+/* Job icon and text side by side */
+.history-job-info {
+  display: flex;
+  /* Side by side */
+  align-items: flex-start;
+  /* Top-aligned */
+  gap: 10px;
+  /* Space between icon and text */
+}
+
+/* Small icon square in the session card */
+.history-icon {
+  width: 38px;
+  /* Fixed 38px width */
+  height: 38px;
+  /* Fixed 38px height */
+  background: var(--accent-light);
+  /* Faint emerald fill */
+  border-radius: 9px;
+  /* Rounded corners */
+  display: flex;
+  /* Centers the icon */
+  align-items: center;
+  /* Vertically centered */
+  justify-content: center;
+  /* Horizontally centered */
+  color: var(--accent);
+  /* Emerald icon color */
+  flex-shrink: 0;
+  /* Prevents shrinking */
+}
+
+/* Styles the job title in the session card */
+.history-job-title {
+  font-size: .92rem;
+  /* Readable size */
+  font-weight: 700;
+  /* Bold */
+  margin-bottom: 3px;
+  /* Tiny gap below title */
+}
+
+/* Styles the date below the job title */
+.history-date {
+  font-size: .74rem;
+  /* Small text */
+  color: var(--text-faint);
+  /* Faintest text color */
+}
+
+/* Styles the Completed status badge */
+.history-status-badge {
+  background: rgba(16, 185, 129, .1);
+  /* Faint emerald background */
+  color: var(--accent);
+  /* Emerald text */
+  border: 1px solid rgba(16, 185, 129, .2);
+  /* Subtle emerald border */
+  border-radius: 100px;
+  /* Fully rounded pill */
+  padding: 2px 9px;
+  /* Internal padding */
+  font-size: .68rem;
+  /* Very small text */
+  font-weight: 600;
+  /* Semi-bold */
+  flex-shrink: 0;
+  /* Prevents shrinking */
+}
+
+/* Styles the three-stat row inside each session card */
+.history-stats {
+  display: flex;
+  /* Three stats side by side */
+  justify-content: space-around;
+  /* Evenly distributed */
+  background: var(--surface-2);
+  /* Secondary surface background */
+  border-radius: 9px;
+  /* Rounded corners */
+  padding: 10px;
+  /* Internal padding */
+}
+
+/* Stacks the stat number above its label */
+.history-stat {
+  display: flex;
+  /* Vertical stacking */
+  flex-direction: column;
+  /* Number above label */
+  align-items: center;
+  /* Horizontally centered */
+  gap: 2px;
+  /* Tiny gap between number and label */
+}
+
+/* Styles the number in each session stat */
+.hstat-number {
+  font-family: 'Syne', sans-serif;
+  /* Bold Syne font */
+  font-size: 1.15rem;
+  /* Prominent size */
+  font-weight: 700;
+  /* Bold */
+  line-height: 1;
+  /* No extra spacing */
+}
+
+/* Overrides number style for the best candidate name display */
+.hstat-name {
+  font-size: .74rem !important;
+  /* Forces smaller size for name */
+  font-family: 'DM Sans', sans-serif !important;
+  /* Forces regular page font */
+}
+
+/* Styles the label below each session stat */
+.hstat-label {
+  font-size: .65rem;
+  /* Very small text */
+  text-transform: uppercase;
+  /* All uppercase */
+  letter-spacing: .05em;
+  /* Letter spacing */
+  color: var(--text-faint);
+  /* Faintest text color */
+}
+
+/* Styles the action buttons row at the bottom of each session card */
+.history-card-actions {
+  display: flex;
+  /* Buttons side by side */
+  align-items: center;
+  /* Vertically centered */
+  gap: 7px;
+  /* Space between buttons */
+}
+
+/* Styles the main View Results button */
+.btn-view-session {
+  flex: 1;
+  /* Takes all remaining width */
+  display: flex;
+  /* Icon and label side by side */
+  align-items: center;
+  /* Vertically centered */
+  justify-content: center;
+  /* Horizontally centered */
+  gap: 7px;
+  /* Space between icon and text */
+  background: var(--accent);
+  /* Solid emerald fill */
+  color: #fff;
+  /* White text */
+  border: none;
+  /* No border */
+  border-radius: 8px;
+  /* Rounded corners */
+  padding: 7px 14px;
+  /* Internal padding */
+  font-size: .8rem;
+  /* Small text */
+  font-weight: 600;
+  /* Semi-bold */
+  cursor: pointer;
+  /* Hand cursor */
+  font-family: 'DM Sans', sans-serif;
+  /* Page font */
+  transition: background .2s;
+  /* Animate background on hover */
+}
+
+/* Darkens View Results button on hover */
+.btn-view-session:hover {
+  background: var(--accent-hover);
+  /* Hover shade of emerald */
+}
+
+/* Shared base styles for export and delete icon buttons */
+.btn-export-sm,
+.btn-delete-sm {
+  width: 34px;
+  /* Fixed 34px width */
+  height: 34px;
+  /* Fixed 34px height */
+  border-radius: 7px;
+  /* Rounded corners */
+  display: flex;
+  /* Centers icon */
+  align-items: center;
+  /* Vertically centered */
+  justify-content: center;
+  /* Horizontally centered */
+  font-size: .76rem;
+  /* Icon size */
+  transition: all .2s;
+  /* Animate on hover */
+  border: 1px solid var(--border);
+  /* Subtle border */
+  cursor: pointer;
+  /* Hand cursor */
+  background: var(--surface);
+  /* Surface background */
+  color: var(--text-muted);
+  /* Muted icon color */
+}
+
+/* Highlights export button with emerald on hover */
+.btn-export-sm:hover {
+  color: var(--accent);
+  /* Emerald icon on hover */
+  border-color: var(--accent);
+  /* Emerald border on hover */
+}
+
+/* Highlights delete button with red on hover */
+.btn-delete-sm:hover {
+  color: var(--score-low);
+  /* Red icon on hover */
+  border-color: var(--score-low);
+  /* Red border on hover */
+}
+
+/* Styles the empty state when no history exists */
+.empty-history {
+  text-align: center;
+  /* Centers content */
+  padding: 72px 20px;
+  /* Generous padding */
+  color: var(--text-muted);
+  /* Muted text color */
+}
+
+/* Styles the large folder icon in the empty state */
+.empty-icon {
+  font-size: 2.8rem;
+  /* Large icon */
+  color: var(--text-faint);
+  /* Faintest text color */
+  margin-bottom: 14px;
+  /* Space below icon */
+}
+
+/* Styles the title in the empty history state */
+.empty-title {
+  font-size: 1.35rem;
+  /* Relatively large title */
+  font-weight: 700;
+  /* Bold */
+  margin-bottom: 7px;
+  /* Gap below title */
+}
+
+/* Styles the description in the empty history state */
+.empty-desc {
+  font-size: .86rem;
+  /* Smaller than body text */
+  color: var(--text-faint);
+  /* Faintest text color */
+  margin-bottom: 22px;
+  /* Space below description */
+}
+
+/* ── RESPONSIVE ── */
+/* Tablet: collapses multi-column grids to single column */
+@media (max-width: 768px) {
+
+  /* All two and three column grids become single column on tablets */
+  .form-grid,
+  .steps-grid,
+  .summary-cards,
+  .skills-grid {
+    grid-template-columns: 1fr;
+    /* Single column on tablets */
+  }
+
+  .detail-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  /* Score circle stacks below name */
+  .action-row {
+    flex-direction: column;
+  }
+
+  /* Action buttons stack vertically */
+  .stats-bar {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* Stats stack vertically */
+  .stat-divider {
+    display: none;
+  }
+
+  /* Hides dividers between stacked stats */
+  .hero-title {
+    font-size: 2.2rem;
+  }
+
+  /* Smaller hero title on tablets */
+  .history-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* History grid becomes single column */
+  .navbar {
+    padding: 0 16px;
+  }
+
+  /* Reduced navbar padding on tablets */
+}
+
+/* Mobile: extra adjustments for very small screens */
+@media (max-width: 480px) {
+  .container {
+    padding: 0 14px;
+  }
+
+  /* Tighter container padding on mobile */
+  .form-card {
+    padding: 16px;
+  }
+
+  /* Reduced card padding on mobile */
+  .btn-submit {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Full-width submit button on mobile */
+  .nav-links {
+    display: none;
+  }
+
+  /* Nav links hidden on very small screens */
+  .chart-wrapper {
+    height: 220px;
+  }
+
+  /* Shorter chart on mobile */
+}

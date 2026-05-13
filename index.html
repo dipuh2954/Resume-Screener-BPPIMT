@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<!-- Upload page: user enters job description and uploads resumes -->
+<html lang="en" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HireAI — Screen Candidates</title>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- ═══════════════════ NAVBAR ═══════════════════ -->
+  <nav class="navbar">
+    <a href="index.html" class="nav-logo">
+      <span class="logo-icon">⬡</span>
+      <span class="logo-text">Hire<span class="accent">AI</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link active">
+        <i class="fas fa-upload"></i> Screen
+      </a>
+      <a href="main.html" class="nav-link" onclick="sessionStorage.setItem('view','history')">
+        <i class="fas fa-clock-rotate-left"></i> History
+      </a>
+    </div>
+    <button class="theme-toggle" onclick="toggleTheme()" title="Switch theme">
+      <i class="fas fa-moon" id="themeIcon"></i>
+    </button>
+  </nav>
+
+  <main class="main-content">
+
+    <!-- ── HERO SECTION ── -->
+    <section class="hero">
+      <div class="hero-grid-bg"></div>
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="badge-dot"></span>
+          AI-Powered Screening
+        </div>
+        <h1 class="hero-title">
+          Hire Smarter.<br />
+          <span class="accent">Not Harder.</span>
+        </h1>
+        <p class="hero-subtitle">
+          Upload a job description and multiple resumes — our AI ranks every
+          candidate by match score in seconds.
+        </p>
+        <div class="hero-arrow"><i class="fas fa-chevron-down"></i></div>
+      </div>
+    </section>
+
+    <!-- ── STATS BAR ── -->
+    <div class="stats-bar">
+      <div class="stat-item">
+        <span class="stat-number">10x</span>
+        <span class="stat-label">Faster Screening</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-number">94%</span>
+        <span class="stat-label">Match Accuracy</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-number">250+</span>
+        <span class="stat-label">Resumes/Job (avg)</span>
+      </div>
+    </div>
+
+    <!-- ── MAIN FORM SECTION ── -->
+    <section class="form-section">
+      <div class="container">
+
+        <div class="form-grid">
+
+          <!-- LEFT CARD: Job Description input -->
+          <div class="form-card">
+            <div class="card-header">
+              <i class="fas fa-file-lines card-icon"></i>
+              <div>
+                <h2 class="card-title">Job Description</h2>
+                <p class="card-subtitle">Paste the full Job Description including skills and requirements</p>
+              </div>
+            </div>
+
+            <div class="input-group">
+              <label class="input-label" for="job_title">
+                <i class="fas fa-briefcase"></i> Job Title
+              </label>
+              <input type="text" id="job_title" class="text-input" placeholder="e.g. Backend Python Developer" />
+            </div>
+
+            <div class="input-group">
+              <label class="input-label" for="job_description">
+                <i class="fas fa-align-left"></i> Job Description
+              </label>
+              <textarea id="job_description" class="textarea-input" rows="11"
+                placeholder="Paste the full job description here..."></textarea>
+              <div class="char-counter">
+                <span id="charCount">0</span> characters &nbsp;·&nbsp;
+                <span class="char-tip">Longer Job Description = more accurate AI matching</span>
+              </div>
+            </div>
+
+            <div class="input-group">
+              <label class="input-label" for="experience_level">
+                <i class="fas fa-layer-group"></i> Experience Level
+              </label>
+              <select id="experience_level" class="select-input">
+                <option value="all">All Levels</option>
+                <option value="fresher">Fresher (0 - 1 yr)</option>
+                <option value="mid">Mid-Level (2 - 4 yrs)</option>
+                <option value="senior">Senior (5+ yrs)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- RIGHT CARD: Resume upload -->
+          <div class="form-card">
+            <div class="card-header">
+              <i class="fas fa-users card-icon"></i>
+              <div>
+                <h2 class="card-title">Upload Resumes</h2>
+                <p class="card-subtitle">Drop multiple PDF resumes — up to 20 files</p>
+              </div>
+            </div>
+
+            <div class="drop-zone" id="dropZone">
+              <div class="drop-zone-inner">
+                <div class="drop-icon"><i class="fas fa-cloud-arrow-up"></i></div>
+                <p class="drop-text">Drag &amp; drop PDF resumes here</p>
+                <p class="drop-subtext">or</p>
+                <input type="file" id="resumeFiles" multiple accept=".pdf" class="file-input-hidden" />
+                <button type="button" class="btn-browse" onclick="document.getElementById('resumeFiles').click()">
+                  Browse Files
+                </button>
+                <p class="drop-hint">PDF only &bull; Max 20 files &bull; 10MB each</p>
+              </div>
+            </div>
+
+            <div class="file-list" id="fileList"></div>
+
+            <div class="file-count-bar" id="fileCountBar" style="display:none;">
+              <i class="fas fa-check-circle accent"></i>
+              <span id="fileCountText">0 files selected</span>
+              <button type="button" class="btn-clear-files" onclick="clearFiles()">Clear all</button>
+            </div>
+
+            <div class="requirements-box">
+              <p class="req-title"><i class="fas fa-circle-info"></i> For best results:</p>
+              <ul class="req-list">
+                <li><i class="fas fa-check accent"></i> Use text-based PDFs, not scanned images</li>
+                <li><i class="fas fa-check accent"></i> Upload at least 3 resumes to compare</li>
+                <li><i class="fas fa-check accent"></i> Resumes should be in English</li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Submit button -->
+        <div class="submit-row">
+          <button type="button" class="btn-submit" onclick="submitForm()">
+            <span id="submitText">
+              <i class="fas fa-wand-magic-sparkles"></i>&nbsp; Run AI Screening
+            </span>
+            <span id="submitLoading" style="display:none;">
+              <i class="fas fa-circle-notch fa-spin"></i>&nbsp; Processing...
+            </span>
+          </button>
+        </div>
+
+        <!-- Error message area -->
+        <div id="formError" style="display:none;" class="flash flash-error">
+          <i class="fas fa-circle-exclamation"></i>
+          <span id="formErrorText"></span>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── HOW IT WORKS ── -->
+    <section class="how-it-works">
+      <div class="container">
+        <h2 class="section-title">How It Works</h2>
+        <p class="section-subtitle">Three steps. Zero manual effort.</p>
+        <div class="steps-grid">
+          <div class="step-card">
+            <div class="step-number">01</div>
+            <div class="step-icon"><i class="fas fa-paste"></i></div>
+            <h3 class="step-title">Paste the Job Description</h3>
+            <p class="step-desc">Enter the job title and full description including required skills.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-number">02</div>
+            <div class="step-icon"><i class="fas fa-file-pdf"></i></div>
+            <h3 class="step-title">Upload Resumes</h3>
+            <p class="step-desc">Drop up to 20 PDF resumes. AI extracts text from each automatically.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-number">03</div>
+            <div class="step-icon"><i class="fas fa-ranking-star"></i></div>
+            <h3 class="step-title">Get Ranked Results</h3>
+            <p class="step-desc">Candidates ranked by AI match percentage. Export results as CSV.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 HireAI &mdash; Built to Scan<span class="footer-accent">&#9632;</span> Powered by AI</p>
+  </footer>
+
+  <script src="main.js"></script>
+
+  <script>
+    /* Live character counter */
+    document.getElementById('job_description').addEventListener('input', function () {
+      document.getElementById('charCount').textContent = this.value.length;
+    });
+
+    async function submitForm() {
+      const title = document.getElementById('job_title').value.trim();
+      const jd = document.getElementById('job_description').value.trim();
+      const files = document.getElementById('resumeFiles').files;
+      const errEl = document.getElementById('formError');
+      const errTx = document.getElementById('formErrorText');
+
+      // ── Validation ──────────────────────────────────────────
+      errEl.style.display = 'none';
+
+      if (!title) {
+        errTx.textContent = 'Please enter a job title.';
+        errEl.style.display = 'flex';
+        return;
+      }
+      if (jd.length < 50) {
+        errTx.textContent = 'Please enter a more detailed job description (min 50 characters).';
+        errEl.style.display = 'flex';
+        return;
+      }
+      if (!files || files.length === 0) {
+        errTx.textContent = 'Please upload at least one PDF resume.';
+        errEl.style.display = 'flex';
+        return;
+      }
+
+      // ── Loading UI ───────────────────────────────────────────
+      document.getElementById('submitText').style.display = 'none';
+      document.getElementById('submitLoading').style.display = 'inline';
+
+      // ── Build FormData ───────────────────────────────────────
+      const formData = new FormData();
+      formData.append('job_title', title);
+      formData.append('job_description', jd);
+      for (let i = 0; i < files.length; i++) {
+        formData.append('resumes', files[i]);
+      }
+
+      try {
+        const response = await fetch('/screen', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!response.ok) {
+          throw new Error('Server responded with status ' + response.status);
+        }
+
+        const data = await response.json();
+
+        if (!data.success) {
+          throw new Error(data.error || data.message || 'Unknown error from server.');
+        }
+
+        // ── Store results in sessionStorage for main.html ────────
+        sessionStorage.setItem('lastResults', JSON.stringify(data.candidates));
+        sessionStorage.setItem('commonGaps', JSON.stringify(data.common_gaps || []));
+        sessionStorage.setItem('jobTitle', title);
+        sessionStorage.setItem('resumeCount', data.count);
+        sessionStorage.setItem('view', 'results');   // show results view on main.html
+
+        // ── Navigate to results page ─────────────────────────────
+        window.location.href = 'main.html';
+
+      } catch (err) {
+        console.error('Submission error:', err);
+        errTx.textContent = 'Connection failed: ' + err.message + '. Make sure app.py is running.';
+        errEl.style.display = 'flex';
+        document.getElementById('submitText').style.display = 'inline';
+        document.getElementById('submitLoading').style.display = 'none';
+      }
+    }
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<!-- Main page: Results, Candidate Detail, and History views -->
+<html lang="en" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HireAI — Results</title>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+
+<body>
+
+  <!-- ═══════════════════ NAVBAR ═══════════════════ -->
+  <nav class="navbar">
+    <a href="index.html" class="nav-logo">
+      <span class="logo-icon">⬡</span>
+      <span class="logo-text">Hire<span class="accent">AI</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">
+        <i class="fas fa-upload"></i> Screen
+      </a>
+      <a href="#" class="nav-link" id="historyNavLink" onclick="switchView('history'); return false;">
+        <i class="fas fa-clock-rotate-left"></i> History
+      </a>
+    </div>
+    <button class="theme-toggle" onclick="toggleTheme()" title="Switch theme">
+      <i class="fas fa-moon" id="themeIcon"></i>
+    </button>
+  </nav>
+
+  <main class="main-content">
+
+    <!-- ╔══════════════════════════════════════════════╗ -->
+    <!-- ║            VIEW 1: RESULTS                   ║ -->
+    <!-- ╚══════════════════════════════════════════════╝ -->
+    <section id="view-results" class="view-section" style="display:none;">
+
+      <div class="results-hero">
+        <div class="container">
+          <div class="breadcrumb">
+            <a href="index.html" class="breadcrumb-link">
+              <i class="fas fa-arrow-left"></i> New Screening
+            </a>
+            <span class="breadcrumb-sep">/</span>
+            <span class="breadcrumb-current">Results</span>
+          </div>
+          <h1 class="results-title">
+            Results for: <span class="accent" id="resultsJobTitle">—</span>
+          </h1>
+          <p class="results-meta">
+            <i class="fas fa-clock"></i> <span id="resultsDate">—</span>
+            &nbsp;&bull;&nbsp;
+            <i class="fas fa-users"></i> <span id="resultsCount">—</span> resume(s) analyzed
+          </p>
+        </div>
+      </div>
+
+      <div class="container">
+
+        <!-- Summary stat cards -->
+        <div class="summary-cards">
+          <div class="summary-card">
+            <div class="summary-icon"><i class="fas fa-file-user"></i></div>
+            <div class="summary-info">
+              <span class="summary-number" id="statTotal">—</span>
+              <span class="summary-label">Resumes Screened</span>
+            </div>
+          </div>
+          <div class="summary-card summary-card--accent">
+            <div class="summary-icon"><i class="fas fa-trophy"></i></div>
+            <div class="summary-info">
+              <span class="summary-number accent" id="statTop">—</span>
+              <span class="summary-label">Top Match Score</span>
+            </div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-icon"><i class="fas fa-chart-line"></i></div>
+            <div class="summary-info">
+              <span class="summary-number" id="statAvg">—</span>
+              <span class="summary-label">Average Score</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bar chart card -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h2 class="chart-title"><i class="fas fa-chart-bar"></i> Score Comparison</h2>
+            <button class="btn-export" onclick="exportCSV()">
+              <i class="fas fa-download"></i> Export CSV
+            </button>
+          </div>
+          <div class="chart-wrapper">
+            <canvas id="scoresChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Ranked candidates table -->
+        <div class="table-card">
+          <div class="table-header">
+            <h2 class="table-title"><i class="fas fa-ranking-star"></i> Ranked Candidates</h2>
+            <div class="table-search">
+              <i class="fas fa-magnifying-glass"></i>
+              <input type="text" id="candidateSearch" class="search-input" placeholder="Search by name..."
+                oninput="filterCandidates()" />
+            </div>
+          </div>
+
+          <div class="table-wrapper">
+            <table class="candidates-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Candidate</th>
+                  <th>Match Score</th>
+                  <th>Level</th>
+                  <th>Top Skills Matched</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="candidatesBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Skills gap card -->
+        <div class="gap-card">
+          <h2 class="gap-title"><i class="fas fa-triangle-exclamation"></i> Common Skills Gap</h2>
+          <p class="gap-subtitle">Keywords in the Job Description missing from most resumes:</p>
+          <div class="gap-pills" id="gapPills"></div>
+        </div>
+
+      </div>
+    </section>
+    <!-- END VIEW: RESULTS -->
+
+
+    <!-- ╔══════════════════════════════════════════════╗ -->
+    <!-- ║         VIEW 2: CANDIDATE DETAIL             ║ -->
+    <!-- ╚══════════════════════════════════════════════╝ -->
+    <section id="view-detail" class="view-section" style="display:none;">
+
+      <div class="detail-hero">
+        <div class="container">
+          <div class="breadcrumb">
+            <a href="index.html" class="breadcrumb-link">
+              <i class="fas fa-arrow-left"></i> New Screening
+            </a>
+            <span class="breadcrumb-sep">/</span>
+            <a href="#" class="breadcrumb-link" onclick="switchView('results'); return false;">Results</a>
+            <span class="breadcrumb-sep">/</span>
+            <span class="breadcrumb-current" id="detailBreadName"></span>
+          </div>
+
+          <div class="detail-header">
+            <div class="detail-info">
+              <div class="candidate-avatar" id="detailAvatar"></div>
+              <div>
+                <h1 class="detail-name" id="detailName"></h1>
+                <p class="detail-meta" id="detailMeta"></p>
+              </div>
+            </div>
+            <div class="score-circle-wrapper">
+              <div class="score-circle" id="detailScoreCircle">
+                <span class="score-circle-number" id="detailScoreNum"></span>
+                <span class="score-circle-label">Match</span>
+              </div>
+              <p class="score-rank" id="detailRank"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+
+        <!-- AI Insight banner -->
+        <div class="insight-banner" id="insightBanner" style="display:none;">
+          <i class="fas fa-robot"></i>
+          <span id="insightText"></span>
+        </div>
+
+        <!-- Side-by-side skill cards -->
+        <div class="skills-grid">
+          <div class="skills-card skills-card--matched">
+            <div class="skills-card-header">
+              <i class="fas fa-circle-check"></i>
+              <h2>Matched Skills</h2>
+              <span class="skills-count" id="matchedCount">0</span>
+            </div>
+            <div class="skills-pills" id="matchedPills"></div>
+          </div>
+          <div class="skills-card skills-card--missing">
+            <div class="skills-card-header">
+              <i class="fas fa-circle-xmark"></i>
+              <h2>Missing Skills</h2>
+              <span class="skills-count" id="missingCount">0</span>
+            </div>
+            <div class="skills-pills" id="missingPills"></div>
+          </div>
+        </div>
+
+        <!-- Resume text card -->
+        <div class="resume-text-card">
+          <div class="resume-text-header">
+            <h2><i class="fas fa-file-lines"></i> Extracted Resume Text</h2>
+            <button class="btn-copy" onclick="copyResumeText()">
+              <i class="fas fa-copy"></i> Copy
+            </button>
+          </div>
+
+          <div class="text-view-toggle">
+            <button class="toggle-btn active" id="btnHighlighted" onclick="showHighlighted()">
+              <i class="fas fa-highlighter"></i> Highlighted
+            </button>
+            <button class="toggle-btn" id="btnRaw" onclick="showRaw()">
+              <i class="fas fa-align-left"></i> Raw Text
+            </button>
+          </div>
+
+          <div class="resume-text" id="highlightedView"></div>
+          <div class="resume-text" id="rawView" style="display:none;"></div>
+        </div>
+
+        <!-- Action buttons -->
+        <div class="action-row">
+          <button class="btn-secondary" onclick="switchView('results')">
+            <i class="fas fa-arrow-left"></i> Back to Results
+          </button>
+          <a href="#" id="emailBtn" class="btn-primary">
+            <i class="fas fa-envelope"></i> Shortlist via Email
+          </a>
+        </div>
+
+      </div>
+    </section>
+    <!-- END VIEW: CANDIDATE DETAIL -->
+
+
+    <!-- ╔══════════════════════════════════════════════╗ -->
+    <!-- ║          VIEW 3: HISTORY                     ║ -->
+    <!-- ╚══════════════════════════════════════════════╝ -->
+    <section id="view-history" class="view-section" style="display:none;">
+
+      <div class="page-header">
+        <div class="container">
+          <h1 class="page-title">
+            <i class="fas fa-clock-rotate-left"></i>
+            Screening <span class="accent">History</span>
+          </h1>
+          <p class="page-subtitle">All past sessions saved automatically. Click to reload results.</p>
+        </div>
+      </div>
+
+      <div class="container">
+
+        <!-- Search + count bar -->
+        <div class="history-controls">
+          <div class="history-search">
+            <i class="fas fa-magnifying-glass"></i>
+            <input type="text" id="historySearch" class="search-input" placeholder="Search by job title..."
+              oninput="filterHistory()" />
+          </div>
+          <span class="history-count" id="historyCount"></span>
+        </div>
+
+        <!-- Session cards: populated by JS -->
+        <div class="history-grid" id="historyGrid"></div>
+
+        <!-- Empty state -->
+        <div class="empty-history" id="emptyHistory" style="display:none;">
+          <div class="empty-icon"><i class="fas fa-folder-open"></i></div>
+          <h3 class="empty-title">No history yet</h3>
+          <p class="empty-desc">Your screening sessions will appear here automatically.</p>
+          <a href="index.html" class="btn-primary">
+            <i class="fas fa-wand-magic-sparkles"></i> Start First Screening
+          </a>
+        </div>
+
+      </div>
+    </section>
+    <!-- END VIEW: HISTORY -->
+
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 HireAI &mdash; Built to Scan <span class="footer-accent">&#9632;</span> Powered by AI</p>
+  </footer>
+
+  <script src="main.js"></script>
+
+  <script>
+    /* ══════════════════════════════════════════════════════════════
+       DATA — read from sessionStorage (written by index.html after
+       the /screen API call completes)
+    ══════════════════════════════════════════════════════════════ */
+    let CANDIDATES = JSON.parse(sessionStorage.getItem('lastResults') || '[]');
+    let COMMON_GAPS = JSON.parse(sessionStorage.getItem('commonGaps') || '[]');
+
+    /* ══════════════════════════════════════════════════════════════
+       PAGE INITIALIZATION
+    ══════════════════════════════════════════════════════════════ */
+    (function init() {
+      const view = sessionStorage.getItem('view') || 'results';
+      switchView(view);
+    })();
+
+    /* ── SWITCH VIEW ─────────────────────────────────────────────── */
+    function switchView(viewName) {
+      document.querySelectorAll('.view-section').forEach(function (s) {
+        s.style.display = 'none';
+      });
+
+      const target = document.getElementById('view-' + viewName);
+      if (target) target.style.display = 'block';
+
+      sessionStorage.setItem('view', viewName);
+
+      /* Highlight history nav link when on history view */
+      document.getElementById('historyNavLink')
+        .classList.toggle('active', viewName === 'history');
+
+      if (viewName === 'results') populateResultsPage();
+      if (viewName === 'history') populateHistoryPage();
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    /* ── POPULATE RESULTS PAGE ───────────────────────────────────── */
+    function populateResultsPage() {
+      if (CANDIDATES.length === 0) {
+        /* No data: show a friendly nudge */
+        document.getElementById('candidatesBody').innerHTML =
+          '<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--text-muted);">' +
+          '<i class="fas fa-inbox" style="font-size:2rem;display:block;margin-bottom:.5rem;"></i>' +
+          'No results yet. <a href="index.html" style="color:var(--accent);">Run a new screening</a>.</td></tr>';
+        return;
+      }
+
+      const jobTitle = sessionStorage.getItem('jobTitle') || 'Screening Session';
+      const count = sessionStorage.getItem('resumeCount') || CANDIDATES.length;
+
+      document.getElementById('resultsJobTitle').textContent = jobTitle;
+      document.getElementById('resultsDate').textContent =
+        new Date().toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' });
+      document.getElementById('resultsCount').textContent = count;
+
+      /* Summary stats */
+      const scores = CANDIDATES.map(function (c) { return c.score; });
+      const top = scores.length ? Math.max.apply(null, scores) : 0;
+      const avg = scores.length
+        ? Math.round(scores.reduce(function (a, b) { return a + b; }, 0) / scores.length)
+        : 0;
+
+      document.getElementById('statTotal').textContent = CANDIDATES.length;
+      document.getElementById('statTop').textContent = top + '%';
+      document.getElementById('statAvg').textContent = avg + '%';
+
+      /* Candidate table rows */
+      const medals = [
+        '<span class="rank-medal gold"><i class="fas fa-medal"></i></span>',
+        '<span class="rank-medal silver"><i class="fas fa-medal"></i></span>',
+        '<span class="rank-medal bronze"><i class="fas fa-medal"></i></span>'
+      ];
+
+      const tbody = document.getElementById('candidatesBody');
+      tbody.innerHTML = CANDIDATES.map(function (c, i) {
+        const scoreClass = c.score >= 75 ? 'score-high' : c.score >= 50 ? 'score-mid' : 'score-low';
+        const rankCell = i < 3
+          ? medals[i]
+          : '<span class="rank-number">' + (i + 1) + '</span>';
+
+        const skills = (c.matched_skills || []).slice(0, 3);
+        const skillPills = skills
+          .map(function (s) { return '<span class="skill-pill">' + s + '</span>'; })
+          .join('');
+        const more = (c.matched_skills || []).length > 3
+          ? '<span class="skill-more">+' + ((c.matched_skills.length - 3)) + ' more</span>'
+          : '';
+
+        return '<tr class="candidate-row" data-name="' + c.name.toLowerCase() + '">' +
+          '<td class="td-rank">' + rankCell + '</td>' +
+          '<td><div class="candidate-name">' + c.name + '</div>' +
+          '<div class="candidate-file"><i class="fas fa-file-pdf"></i> ' + c.filename + '</div></td>' +
+          '<td><div class="score-display">' +
+          '<span class="score-badge ' + scoreClass + '">' + c.score + '%</span>' +
+          '<div class="score-bar-mini"><div class="score-bar-fill" style="width:' + c.score + '%"></div></div>' +
+          '</div></td>' +
+          '<td><span class="level-tag level-' + c.level + '">' + capitalize(c.level) + '</span></td>' +
+          '<td>' + skillPills + more + '</td>' +
+          '<td><button class="btn-view" onclick="showDetail(' + c.id + ')"><i class="fas fa-eye"></i> View</button></td>' +
+          '</tr>';
+      }).join('');
+
+      /* Gap pills */
+      document.getElementById('gapPills').innerHTML = COMMON_GAPS.length
+        ? COMMON_GAPS.map(function (s) {
+          return '<span class="gap-pill">' + s + '</span>';
+        }).join('')
+        : '<span style="color:var(--text-muted);font-size:.9rem;">No common gaps detected.</span>';
+
+      /* Chart */
+      if (CANDIDATES.length > 0) {
+        drawChart(
+          CANDIDATES.map(function (c) { return c.name; }),
+          CANDIDATES.map(function (c) { return c.score; })
+        );
+      }
+
+      /* Animate score bars */
+      setTimeout(animateScoreBars, 100);
+    }
+
+    /* ── DRAW CHART ──────────────────────────────────────────────── */
+    let chartInstance = null;
+
+    function drawChart(labels, scores) {
+      const canvas = document.getElementById('scoresChart');
+      if (!canvas) return;
+      if (chartInstance) { chartInstance.destroy(); }
+
+      const colors = scores.map(function (s) {
+        return s >= 75 ? '#10b981' : s >= 50 ? '#f59e0b' : '#ef4444';
+      });
+
+      chartInstance = new Chart(canvas.getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Match Score (%)',
+            data: scores,
+            backgroundColor: colors,
+            borderRadius: 6
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: {
+              min: 0, max: 100,
+              ticks: {
+                color: '#7a9982',
+                callback: function (v) { return v + '%'; }
+              },
+              grid: { color: 'rgba(128,128,128,0.08)' }
+            },
+            y: {
+              grid: { display: false },
+              ticks: { color: '#7a9982' }
+            }
+          }
+        }
+      });
+    }
+
+    /* ── SHOW CANDIDATE DETAIL ───────────────────────────────────── */
+    function showDetail(candidateId) {
+      const c = CANDIDATES.find(function (x) { return x.id === candidateId; });
+      if (!c) return;
+
+      document.getElementById('detailBreadName').textContent = c.name;
+      document.getElementById('detailName').textContent = c.name;
+
+      /* Initials avatar */
+      const initials = c.name.split(' ')
+        .map(function (w) { return w[0] || ''; })
+        .join('').slice(0, 2).toUpperCase();
+      document.getElementById('detailAvatar').textContent = initials;
+
+      /* Score circle */
+      document.getElementById('detailScoreNum').textContent = c.score + '%';
+      const sc = document.getElementById('detailScoreCircle');
+      sc.className = 'score-circle ' +
+        (c.score >= 75 ? 'score-circle--high' : c.score >= 50 ? 'score-circle--mid' : 'score-circle--low');
+
+      document.getElementById('detailRank').textContent =
+        'Rank #' + c.rank + ' of ' + CANDIDATES.length;
+
+      document.getElementById('detailMeta').innerHTML =
+        '<i class="fas fa-file-pdf"></i> ' + c.filename +
+        ' &bull; <span class="level-tag level-' + c.level + '">' + capitalize(c.level) + '</span>';
+
+      /* AI Insight */
+      const banner = document.getElementById('insightBanner');
+      if (c.insight && c.insight !== 'No AI analysis available.') {
+        document.getElementById('insightText').textContent = c.insight;
+        banner.style.display = 'flex';
+      } else {
+        banner.style.display = 'none';
+      }
+
+      /* Matched skills */
+      const matched = c.matched_skills || [];
+      document.getElementById('matchedCount').textContent = matched.length;
+      document.getElementById('matchedPills').innerHTML = matched.length
+        ? matched.map(function (s) {
+          return '<span class="skill-pill skill-pill--matched">' + s + '</span>';
+        }).join('')
+        : '<p class="skills-empty">No keyword matches found</p>';
+
+      /* Missing skills */
+      const missing = c.missing_skills || [];
+      document.getElementById('missingCount').textContent = missing.length;
+      document.getElementById('missingPills').innerHTML = missing.length
+        ? missing.map(function (s) {
+          return '<span class="skill-pill skill-pill--missing">' + s + '</span>';
+        }).join('')
+        : '<p class="skills-empty">All JD keywords present ✓</p>';
+
+      /* Resume text */
+      document.getElementById('highlightedView').innerHTML =
+        (c.highlighted_text || c.raw_text || '').replace(/\n/g, '<br>');
+      document.getElementById('rawView').textContent = c.raw_text || '';
+
+      showHighlighted();
+
+      /* Email shortlist link */
+      document.getElementById('emailBtn').href =
+        'mailto:?subject=' + encodeURIComponent('Interview Shortlist — ' + c.name) +
+        '&body=' + encodeURIComponent(
+          c.name + ' scored ' + c.score + '% on AI screening.\n' +
+          'AI Verdict: ' + (c.insight || 'N/A') + '\n' +
+          'Recommending for interview.'
+        );
+
+      switchView('detail');
+    }
+
+    /* ── RESUME TEXT TOGGLE ──────────────────────────────────────── */
+    function showHighlighted() {
+      document.getElementById('highlightedView').style.display = 'block';
+      document.getElementById('rawView').style.display = 'none';
+      document.getElementById('btnHighlighted').classList.add('active');
+      document.getElementById('btnRaw').classList.remove('active');
+    }
+
+    function showRaw() {
+      document.getElementById('rawView').style.display = 'block';
+      document.getElementById('highlightedView').style.display = 'none';
+      document.getElementById('btnRaw').classList.add('active');
+      document.getElementById('btnHighlighted').classList.remove('active');
+    }
+
+    /* ── COPY RESUME TEXT ────────────────────────────────────────── */
+    function copyResumeText() {
+      const text = document.getElementById('rawView').textContent;
+      navigator.clipboard.writeText(text).then(function () {
+        const btn = document.querySelector('.btn-copy');
+        btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+        setTimeout(function () {
+          btn.innerHTML = '<i class="fas fa-copy"></i> Copy';
+        }, 2000);
+      });
+    }
+
+    /* ── EXPORT CSV ──────────────────────────────────────────────── */
+    function exportCSV() {
+      const rows = [['Rank', 'Name', 'File', 'Score (%)', 'Level', 'Matched Skills', 'Missing Skills', 'AI Verdict']];
+      CANDIDATES.forEach(function (c) {
+        rows.push([
+          c.rank, c.name, c.filename, c.score, c.level,
+          (c.matched_skills || []).join('; '),
+          (c.missing_skills || []).join('; '),
+          (c.insight || '').replace(/,/g, ';')
+        ]);
+      });
+
+      const csv = rows.map(function (r) { return r.join(','); }).join('\n');
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'hireai_results.csv';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    /* ── POPULATE HISTORY PAGE ───────────────────────────────────── */
+    async function populateHistoryPage() {
+      const grid = document.getElementById('historyGrid');
+      const empty = document.getElementById('emptyHistory');
+      const count = document.getElementById('historyCount');
+
+      grid.innerHTML = '<p style="color:var(--text-muted);padding:1rem 0;">' +
+        '<i class="fas fa-circle-notch fa-spin"></i> Loading history…</p>';
+
+      try {
+        const res = await fetch('/history');
+        const data = await res.json();
+
+        if (!data.success) throw new Error(data.error || 'Failed to load history.');
+
+        const sessions = data.history || [];   /* ← key fix: was data directly */
+
+        count.textContent = sessions.length + ' session' + (sessions.length !== 1 ? 's' : '');
+
+        if (sessions.length === 0) {
+          grid.style.display = 'none';
+          empty.style.display = 'block';
+          return;
+        }
+
+        grid.style.display = 'grid';
+        empty.style.display = 'none';
+
+        grid.innerHTML = sessions.map(function (s) {
+          /* Format timestamp nicely */
+          const ts = s.timestamp
+            ? new Date(s.timestamp).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })
+            : 'Unknown date';
+
+          /* Top candidate preview */
+          const topCandidate = (s.results && s.results.length > 0)
+            ? s.results[0].name + ' — ' + s.results[0].score + '%'
+            : 'No candidates';
+
+          return (
+            '<div class="history-card" data-title="' + s.job_title.toLowerCase() + '">' +
+            '<div class="history-card-body">' +
+            '<h3 class="history-card-title">' + s.job_title + '</h3>' +
+            '<p class="history-card-meta">' +
+            '<i class="fas fa-clock"></i> ' + ts +
+            '</p>' +
+            '<p class="history-card-meta">' +
+            '<i class="fas fa-users"></i> ' + (s.resume_count || 0) + ' resumes screened' +
+            '</p>' +
+            '<p class="history-card-meta">' +
+            '<i class="fas fa-trophy"></i> Top: ' + topCandidate +
+            '</p>' +
+            '</div>' +
+            '<div class="action-row" style="margin-top:12px;display:flex;gap:10px;">' +
+            '<button class="btn-view" onclick="loadSession(' + s.id + ')">' +
+            '<i class="fas fa-eye"></i> View Results' +
+            '</button>' +
+            '<button class="btn-secondary" onclick="deleteSession(' + s.id + ')">' +
+            '<i class="fas fa-trash"></i> Delete' +
+            '</button>' +
+            '</div>' +
+            '</div>'
+          );
+        }).join('');
+
+      } catch (err) {
+        console.error('History error:', err);
+        grid.innerHTML = '<p style="color:var(--score-low);padding:1rem 0;">' +
+          '<i class="fas fa-circle-exclamation"></i> Could not load history: ' + err.message +
+          '. Make sure app.py is running.</p>';
+      }
+    }
+
+    /* ── LOAD SESSION FROM HISTORY ───────────────────────────────── */
+    async function loadSession(sessionId) {
+      try {
+        const res = await fetch('/history');
+        const data = await res.json();
+
+        if (!data.success) throw new Error('Could not fetch history.');
+
+        const session = (data.history || []).find(function (s) { return s.id === sessionId; });
+        if (!session) {
+          alert('Session not found.');
+          return;
+        }
+
+        /* Restore into sessionStorage so populateResultsPage() works */
+        CANDIDATES = session.results || [];
+        COMMON_GAPS = [];   /* common_gaps not stored per-session; leave empty */
+
+        sessionStorage.setItem('lastResults', JSON.stringify(CANDIDATES));
+        sessionStorage.setItem('commonGaps', JSON.stringify(COMMON_GAPS));
+        sessionStorage.setItem('jobTitle', session.job_title);
+        sessionStorage.setItem('resumeCount', session.resume_count || CANDIDATES.length);
+
+        switchView('results');
+
+      } catch (err) {
+        console.error('Load session error:', err);
+        alert('Failed to load session: ' + err.message);
+      }
+    }
+
+    /* ── DELETE SESSION ──────────────────────────────────────────── */
+    async function deleteSession(sessionId) {
+      if (!confirm('Delete this screening session?')) return;
+
+      try {
+        const res = await fetch('/delete/' + sessionId, {
+          method: 'DELETE'
+        });
+        const data = await res.json();
+
+        if (!data.success) throw new Error(data.error || 'Delete failed.');
+
+        populateHistoryPage();   /* Refresh list */
+
+      } catch (err) {
+        console.error('Delete error:', err);
+        alert('Delete failed: ' + err.message);
+      }
+    }
+
+    /* ── HELPER ──────────────────────────────────────────────────── */
+    function capitalize(str) {
+      if (!str) return '';
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+  </script>
+
+</body>
+
+</html>
