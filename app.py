@@ -45,6 +45,8 @@ def init_db():
         ''')
         conn.commit()
 
+# ADD THIS EXACT LINE HERE, FLUSH AGAINST THE LEFT WALL:
+init_db()
 
 # ------------------ PDF EXTRACTION ------------------
 def extract_text_from_pdf(file_storage):
