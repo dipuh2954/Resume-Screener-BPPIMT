@@ -77,7 +77,7 @@ def extract_jd_keywords(jd_text, top_n=30):
     except Exception:
         return []
 
-
+#it helps to detect matched and missing skills 
 def get_matched_and_missing(resume_text, jd_keywords):
     """Return (matched_skills, missing_skills) lists based on keyword presence."""
     resume_lower = resume_text.lower()
