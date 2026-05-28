@@ -3,7 +3,7 @@
 A full-stack web application designed to automate resume screening using Natural Language Processing and Google's Gemini AI. Built collaboratively as an academic project.
 
 ## 🌐 Live Demo
-*(Once deployed, replace this text with your Render live link: e.g., `https://resume-screeener-bppimt.onrender.com`)*
+https://resume-screeener-bppimt.onrender.com
 
 ## ✨ Features
 * **PDF Text Extraction:** Automatically reads and parses uploaded resumes.
